@@ -1,0 +1,164 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    var userName = HttpContextAccessor.HttpContext?.Session.GetString("UserName");
+    bool isLoggedIn = !string.IsNullOrEmpty(userName);
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ScrimManager</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/ScrimManager.styles.css" asp-append-version="true" />
+</head>
+<body>
+
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+
+                <a class="navbar-brand" asp-page="/Index">ScrimManager</a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+                        aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse justify-content-between" id="mainNavbar">
+
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-page="/Index">Home</a>
+                        </li>
+                    </ul>
+
+                    
+                    <div class="d-flex">
+
+                        @if (!isLoggedIn)
+                        {
+                        
+                            <button type="button"
+                                    class="btn btn-outline-primary me-2"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#loginModal">
+                                Inloggen
+                            </button>
+
+                            <button type="button"
+                                    class="btn btn-primary"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#registerModal">
+                                Registreren
+                            </button>
+                        }
+                        else
+                        {
+                            <!-- Ingelogd: toon gebruikersnaam -->
+                            <span class="navbar-text fw-bold">
+                                @userName
+                            </span>
+                        }
+
+                    </div>
+
+                </div>
+            </div>
+        </nav>
+    </header>
+
+  
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2025 - ScrimManager
+        </div>
+    </footer>
+
+
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Inloggen</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    
+                    <form method="post" asp-page="/Login">
+                        <div class="mb-3">
+                            <label for="EmailLogin" class="form-label">E-mailadres</label>
+                            <input type="email" class="form-control" id="EmailLogin" name="email" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="PasswordLogin" class="form-label">Wachtwoord</label>
+                            <input type="password" class="form-control" id="PasswordLogin" name="password" />
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Inloggen</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="registerModalLabel">Registreren</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                   
+                    <form method="post" asp-page="/Register">
+                        <div class="mb-3">
+                            <label for="UserName" class="form-label">Gebruikersnaam</label>
+                            <input type="text" class="form-control" id="UserName" name="userName" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="Email" class="form-label">E-mailadres</label>
+                            <input type="email" class="form-control" id="Email" name="email" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="Password" class="form-label">Wachtwoord</label>
+                            <input type="password" class="form-control" id="Password" name="password" />
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Account aanmaken</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- SCRIPTS -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

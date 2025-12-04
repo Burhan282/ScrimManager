@@ -1,0 +1,11 @@
+﻿@page
+@model ScrimManager.Pages.RegisterModel
+
+<h1>Registreren</h1>
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <p style="color:red">@Model.ErrorMessage</p>
+}
+
+<p>Gebruik normaal de 'Registreren'-knop bovenin om via de popup te registreren.</p>
