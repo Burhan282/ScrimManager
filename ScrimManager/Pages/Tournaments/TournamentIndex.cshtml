@@ -1,0 +1,766 @@
+﻿@page "/tournaments"
+@model ScrimManager.Pages.Tournaments.TournamentIndexModel
+
+<style>
+    body {
+        background: #f3f4f6;
+        font-family: system-ui, -apple-system, sans-serif;
+    }
+
+    .hero {
+        background: #0d3b5f;
+        color: white;
+        padding: 50px 40px;
+        text-align: center;
+        width: 100vw;
+        margin-left: calc(-50vw + 50%);
+        margin-bottom: 30px;
+    }
+
+        .hero h1 {
+            font-size: 42px;
+            margin-bottom: 10px;
+        }
+
+    .hero-buttons {
+        margin-top: 20px;
+    }
+
+        .hero-buttons button,
+        .hero-buttons a {
+            margin: 5px;
+            padding: 12px 22px;
+            border-radius: 999px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            font-size: 15px;
+            transition: 0.15s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+            .hero-buttons button:hover,
+            .hero-buttons a:hover {
+                transform: translateY(-1px);
+            }
+
+    .btn-create {
+        background: #1da1f2;
+        color: white;
+    }
+
+    .btn-search {
+        background: white;
+        color: black;
+    }
+
+    .page-container {
+        max-width: 1900px;
+        margin: 0 auto;
+        padding: 0 28px 40px;
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+        gap: 16px;
+    }
+
+    .section-title {
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: #64748b;
+    }
+
+    .mode-filter {
+        background: white;
+        border: 1px solid #d8dee6;
+        border-radius: 4px;
+        padding: 10px 14px;
+        font-size: 14px;
+        color: #334155;
+        min-width: 180px;
+    }
+
+    .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 14px;
+    }
+
+    .tournament-card {
+        background: white;
+        border: 1px solid #d9e0e8;
+        border-radius: 4px;
+        overflow: hidden;
+        transition: 0.15s ease;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        cursor: pointer;
+    }
+
+        .tournament-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+    .card-image-wrapper {
+        position: relative;
+        width: 100%;
+        height: 140px;
+        background: #ddd;
+        overflow: hidden;
+    }
+
+        .card-image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+    .status-badge {
+        position: absolute;
+        left: 10px;
+        bottom: 10px;
+        padding: 6px 10px;
+        font-size: 12px;
+        font-weight: 700;
+        color: white;
+        border-radius: 3px;
+        line-height: 1;
+    }
+
+    .status-open {
+        background: #16a34a;
+    }
+
+    .status-closing {
+        background: #e11d48;
+    }
+
+    .card-content {
+        padding: 14px 16px 16px;
+    }
+
+    .card-title {
+        font-weight: 700;
+        font-size: 16px;
+        margin-bottom: 4px;
+        color: #2f3b4c;
+        line-height: 1.35;
+        word-break: break-word;
+    }
+
+    .card-subtitle {
+        color: #748399;
+        font-size: 14px;
+        margin-bottom: 14px;
+        line-height: 1.35;
+        word-break: break-word;
+    }
+
+    .card-info {
+        font-size: 14px;
+        color: #748399;
+        margin-bottom: 7px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .card-icon {
+        width: 16px;
+        text-align: center;
+        flex-shrink: 0;
+    }
+
+    .no-results {
+        display: none;
+        margin-top: 20px;
+        padding: 20px;
+        background: white;
+        border: 1px solid #d9e0e8;
+        border-radius: 4px;
+        color: #64748b;
+        font-size: 15px;
+    }
+
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.45);
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+    }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+    .modal-card,
+    .details-modal-card {
+        background: white;
+        width: 100%;
+        max-width: 760px;
+        border-radius: 12px;
+        overflow: hidden;
+        animation: fade 0.15s ease;
+        box-shadow: 0 10px 28px rgba(0,0,0,0.18);
+    }
+
+    @@keyframes fade {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .modal-header {
+        background: #0d3b5f;
+        color: white;
+        padding: 22px 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+
+        .modal-header h2 {
+            margin: 0 0 6px 0;
+            font-size: 28px;
+        }
+
+        .modal-header p {
+            margin: 0;
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+    .close-btn {
+        background: transparent;
+        border: none;
+        color: white;
+        font-size: 28px;
+        cursor: pointer;
+        line-height: 1;
+    }
+
+    .modal-body,
+    .details-body {
+        padding: 24px;
+    }
+
+    .details-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px 18px;
+        margin-top: 16px;
+    }
+
+    .details-item {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 12px 14px;
+    }
+
+    .details-label {
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: #64748b;
+        margin-bottom: 4px;
+        letter-spacing: 0.5px;
+    }
+
+    .details-value {
+        font-size: 15px;
+        color: #1f2937;
+        word-break: break-word;
+    }
+
+    .details-description {
+        margin-top: 18px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 14px;
+    }
+
+        .details-description h3 {
+            margin: 0 0 8px 0;
+            font-size: 14px;
+            color: #334155;
+        }
+
+        .details-description p {
+            margin: 0;
+            color: #475569;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+
+    .form-group-full {
+        grid-column: 1 / -1;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #1f2937;
+        font-size: 14px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: 12px 13px;
+        border-radius: 8px;
+        border: 1px solid #d1d5db;
+        font-size: 14px;
+        background: white;
+        color: #111827;
+        font-family: inherit;
+    }
+
+    .form-group textarea {
+        min-height: 110px;
+        resize: vertical;
+    }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #1da1f2;
+            box-shadow: 0 0 0 3px rgba(29, 161, 242, 0.12);
+        }
+
+    .price-input-wrapper {
+        position: relative;
+    }
+
+    .price-currency {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #475569;
+        font-size: 14px;
+        font-weight: 600;
+        pointer-events: none;
+    }
+
+    .price-input-wrapper input {
+        padding-left: 30px;
+    }
+
+    .helper-text {
+        margin-top: 12px;
+        color: #6b7280;
+        font-size: 13px;
+    }
+
+    .modal-actions {
+        margin-top: 18px;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .btn-save,
+    .btn-join {
+        background: #1da1f2;
+        color: white;
+        padding: 11px 16px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 700;
+    }
+
+    .btn-join {
+        background: #16a34a;
+    }
+
+    .btn-cancel {
+        background: transparent;
+        border: none;
+        color: #0d3b5f;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    @@media (max-width: 900px) {
+        .page-container {
+            padding: 0 20px 30px;
+        }
+    }
+
+    @@media (max-width: 700px) {
+        .hero {
+            padding: 38px 20px;
+        }
+
+            .hero h1 {
+                font-size: 34px;
+            }
+
+        .form-grid,
+        .details-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .section-header {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 10px;
+        }
+
+        .mode-filter {
+            width: 100%;
+        }
+
+        .cards {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="hero">
+    <h1>Scrim Manager</h1>
+    <p>Community through competition</p>
+
+    <div class="hero-buttons">
+        <button type="button" class="btn-create" onclick="openTournamentModal()">+ Create Tournament</button>
+        <a href="#" class="btn-search">Search Tournaments</a>
+    </div>
+</div>
+
+<div class="page-container">
+    <div class="section-header">
+        <div class="section-title">Featured Tournaments</div>
+
+        <select id="modeFilter" class="mode-filter" onchange="filterTournaments()">
+            <option value="all">Choose your mode</option>
+            <option value="1v1">1v1</option>
+            <option value="2v2">2v2</option>
+            <option value="3v3">3v3</option>
+        </select>
+    </div>
+
+    <div class="cards" id="tournamentCards">
+        @foreach (var item in Model.Tournaments)
+        {
+            string imagePath = "/images/default.png";
+            string subtitle = item.Organisator ?? "";
+            double daysUntilStart = (item.Datum - DateTime.UtcNow).TotalDays;
+            bool closesSoon = item.Status == "Open" && daysUntilStart >= 0 && daysUntilStart <= 7;
+            string badgeText = closesSoon ? "Registration Closes Soon" : (item.Status == "Open" ? "Registration Open" : item.Status);
+            string badgeClass = closesSoon ? "status-closing" : "status-open";
+
+            if (item.Format == "1v1")
+            {
+                imagePath = "/images/1v1.png";
+            }
+            else if (item.Format == "2v2")
+            {
+                imagePath = "/images/2v2.png";
+            }
+            else if (item.Format == "3v3")
+            {
+                imagePath = "/images/3v3.png";
+            }
+
+            <div class="tournament-card"
+                 data-mode="@item.Format"
+                 data-id="@item.Id"
+                 data-name="@item.Naam"
+                 data-organizer="@item.Organisator"
+                 data-date="@item.Datum.ToString("dd-MM-yyyy HH:mm")"
+                 data-format="@item.Format"
+                 data-maxteams="@item.MaxTeams"
+                 data-participatingteams="@item.ParticipatingTeams"
+                 data-prizemoney="@(item.PrizeMoney?.ToString("0.##") ?? "0")"
+                 data-description="@(item.Description ?? "No description available.")"
+                 data-status="@badgeText"
+                 onclick="openTournamentDetails(this)">
+                <div class="card-image-wrapper">
+                    <img src="@imagePath" alt="@item.Format" />
+                    <div class="status-badge @badgeClass">@badgeText</div>
+                </div>
+
+                <div class="card-content">
+                    <div class="card-title">@item.Naam</div>
+                    <div class="card-subtitle">@subtitle</div>
+
+                    <div class="card-info">
+                        <span class="card-icon">📅</span>
+                        <span>@item.Datum.ToString("dd-MM")</span>
+                    </div>
+
+                    <div class="card-info">
+                        <span class="card-icon">🎮</span>
+                        <span>@item.Format</span>
+                    </div>
+
+                    <div class="card-info">
+                        <span class="card-icon">👥</span>
+                        <span>@item.ParticipatingTeams / @item.MaxTeams teams</span>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div id="noResults" class="no-results">
+        No tournaments found for this mode.
+    </div>
+</div>
+
+<div id="tournamentModal" class="modal-overlay" onclick="closeModalOutside(event)">
+    <div class="modal-card">
+        <div class="modal-header">
+            <div>
+                <h2>Create Tournament</h2>
+                <p>Quickly create a new Rocket League tournament.</p>
+            </div>
+            <button type="button" class="close-btn" onclick="closeTournamentModal()">&times;</button>
+        </div>
+
+        <div class="modal-body">
+            <form method="post" asp-page="/Tournaments/Create">
+                <div class="form-grid">
+                    <div class="form-group form-group-full">
+                        <label for="Tournament_Naam">Name</label>
+                        <input id="Tournament_Naam" name="Tournament.Naam" placeholder="Example: Scrim Manager Summer Cup" />
+                    </div>
+
+                    <div class="form-group form-group-full">
+                        <label for="Tournament_Organisator">Organizer</label>
+                        <input id="Tournament_Organisator" name="Tournament.Organisator" placeholder="Example: Burhan" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="SelectedDate">Start Date</label>
+                        <input id="SelectedDate" name="SelectedDate" type="date" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="SelectedTime">Start Time</label>
+                        <input id="SelectedTime" name="SelectedTime" type="time" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Tournament_Format">Format</label>
+                        <select id="Tournament_Format" name="Tournament.Format">
+                            <option value="">-- Select format --</option>
+                            <option value="1v1">1v1</option>
+                            <option value="2v2">2v2</option>
+                            <option value="3v3">3v3</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Tournament_MaxTeams">Max Teams</label>
+                        <select id="Tournament_MaxTeams" name="Tournament.MaxTeams">
+                            <option value="">-- Select max teams --</option>
+                            <option value="8">8</option>
+                            <option value="16">16</option>
+                            <option value="32">32</option>
+                            <option value="64">64</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Tournament_PrizeMoney">Prize Money</label>
+                        <div class="price-input-wrapper">
+                            <span class="price-currency">€</span>
+                            <input id="Tournament_PrizeMoney" name="Tournament.PrizeMoney" type="number" step="0.01" min="0" placeholder="250" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Tournament_ParticipatingTeams">Participating Teams</label>
+                        <input id="Tournament_ParticipatingTeams" name="Tournament.ParticipatingTeams" type="number" min="0" placeholder="Example: 8" />
+                    </div>
+
+                    <div class="form-group form-group-full">
+                        <label for="Tournament_Description">Description</label>
+                        <textarea id="Tournament_Description" name="Tournament.Description" placeholder="Write more details about the tournament..."></textarea>
+                    </div>
+                </div>
+
+                <div class="helper-text">
+                    Status will automatically be set to <strong>Open</strong> after saving.
+                </div>
+
+                <div class="modal-actions">
+                    <button type="submit" class="btn-save">Save Tournament</button>
+                    <button type="button" class="btn-cancel" onclick="closeTournamentModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="detailsModal" class="modal-overlay" onclick="closeDetailsModalOutside(event)">
+    <div class="details-modal-card">
+        <div class="modal-header">
+            <div>
+                <h2 id="detailsTitle">Tournament Details</h2>
+                <p id="detailsStatus">Registration Open</p>
+            </div>
+            <button type="button" class="close-btn" onclick="closeTournamentDetails()">&times;</button>
+        </div>
+
+        <div class="details-body">
+            <div class="details-grid">
+                <div class="details-item">
+                    <div class="details-label">Organizer</div>
+                    <div class="details-value" id="detailsOrganizer"></div>
+                </div>
+
+                <div class="details-item">
+                    <div class="details-label">Start</div>
+                    <div class="details-value" id="detailsDate"></div>
+                </div>
+
+                <div class="details-item">
+                    <div class="details-label">Mode</div>
+                    <div class="details-value" id="detailsFormat"></div>
+                </div>
+
+                <div class="details-item">
+                    <div class="details-label">Prize Money</div>
+                    <div class="details-value" id="detailsPrizeMoney"></div>
+                </div>
+
+                <div class="details-item">
+                    <div class="details-label">Participating Teams</div>
+                    <div class="details-value" id="detailsParticipants"></div>
+                </div>
+
+                <div class="details-item">
+                    <div class="details-label">Max Teams</div>
+                    <div class="details-value" id="detailsMaxTeams"></div>
+                </div>
+            </div>
+
+            <div class="details-description">
+                <h3>Description</h3>
+                <p id="detailsDescription"></p>
+            </div>
+
+            <form method="post" asp-page-handler="Join">
+                <input type="hidden" id="joinTournamentId" name="tournamentId" />
+                <div class="modal-actions">
+                    <button type="submit" class="btn-join">Join Tournament</button>
+                    <button type="button" class="btn-cancel" onclick="closeTournamentDetails()">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openTournamentModal() {
+        document.getElementById("tournamentModal").classList.add("show");
+        document.body.style.overflow = "hidden";
+    }
+
+    function closeTournamentModal() {
+        document.getElementById("tournamentModal").classList.remove("show");
+        document.body.style.overflow = "";
+    }
+
+    function closeModalOutside(event) {
+        const modal = document.getElementById("tournamentModal");
+        if (event.target === modal) {
+            closeTournamentModal();
+        }
+    }
+
+    function openTournamentDetails(card) {
+        document.getElementById("detailsTitle").textContent = card.dataset.name || "";
+        document.getElementById("detailsStatus").textContent = card.dataset.status || "";
+        document.getElementById("detailsOrganizer").textContent = card.dataset.organizer || "";
+        document.getElementById("detailsDate").textContent = card.dataset.date || "";
+        document.getElementById("detailsFormat").textContent = card.dataset.format || "";
+        document.getElementById("detailsMaxTeams").textContent = card.dataset.maxteams || "";
+        document.getElementById("detailsParticipants").textContent = card.dataset.participatingteams || "";
+        document.getElementById("detailsPrizeMoney").textContent = "€" + (card.dataset.prizemoney || "0");
+        document.getElementById("detailsDescription").textContent = card.dataset.description || "";
+        document.getElementById("joinTournamentId").value = card.dataset.id || "";
+
+        document.getElementById("detailsModal").classList.add("show");
+        document.body.style.overflow = "hidden";
+    }
+
+    function closeTournamentDetails() {
+        document.getElementById("detailsModal").classList.remove("show");
+        document.body.style.overflow = "";
+    }
+
+    function closeDetailsModalOutside(event) {
+        const modal = document.getElementById("detailsModal");
+        if (event.target === modal) {
+            closeTournamentDetails();
+        }
+    }
+
+    function filterTournaments() {
+        const selectedMode = document.getElementById("modeFilter").value;
+        const cards = document.querySelectorAll(".tournament-card");
+        const noResults = document.getElementById("noResults");
+
+        let visibleCount = 0;
+
+        cards.forEach(card => {
+            const cardMode = card.getAttribute("data-mode");
+
+            if (selectedMode === "all" || cardMode === selectedMode) {
+                card.style.display = "";
+                visibleCount++;
+            } else {
+                card.style.display = "none";
+            }
+        });
+
+        noResults.style.display = visibleCount === 0 ? "block" : "none";
+    }
+
+    document.addEventListener("keydown", function(e) {
+        const createModal = document.getElementById("tournamentModal");
+        const detailsModal = document.getElementById("detailsModal");
+
+        if (e.key === "Escape" && createModal.classList.contains("show")) {
+            closeTournamentModal();
+        }
+
+        if (e.key === "Escape" && detailsModal.classList.contains("show")) {
+            closeTournamentDetails();
+        }
+    });
+</script>
