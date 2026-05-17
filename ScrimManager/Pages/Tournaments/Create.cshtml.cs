@@ -1,18 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using ScrimManager.Data;
-using ScrimManager.Models;
+using ScrimManager.Domain;
+using ScrimManager.Application;
 
 namespace ScrimManager.Pages.Tournaments
 {
     public class CreateModel : PageModel
     {
-        private readonly ScrimManagerDbContext _context;
-
-        public CreateModel(ScrimManagerDbContext context)
-        {
-            _context = context;
-        }
+        private readonly TournamentService _tournamentService;
 
         [BindProperty]
         public Tournament Tournament { get; set; } = new Tournament();
@@ -23,82 +18,28 @@ namespace ScrimManager.Pages.Tournaments
         [BindProperty]
         public TimeSpan? SelectedTime { get; set; }
 
-        public void OnGet()
+        public CreateModel(TournamentService tournamentService)
         {
+            _tournamentService = tournamentService;
         }
 
+        // ✅ Alles wat uitgevoerd wordt bij POST komt hier
         public IActionResult OnPost()
         {
-            if (string.IsNullOrWhiteSpace(Tournament.Naam))
+            if (!SelectedDate.HasValue || !SelectedTime.HasValue)
             {
-                ModelState.AddModelError("Tournament.Naam", "The name field is required.");
-            }
-
-            if (string.IsNullOrWhiteSpace(Tournament.Organisator))
-            {
-                ModelState.AddModelError("Tournament.Organisator", "The organizer field is required.");
-            }
-
-            if (string.IsNullOrWhiteSpace(Tournament.Format))
-            {
-                ModelState.AddModelError("Tournament.Format", "Please select a format.");
-            }
-
-            if (Tournament.MaxTeams <= 0)
-            {
-                ModelState.AddModelError("Tournament.MaxTeams", "Please select the maximum number of teams.");
-            }
-
-            if (Tournament.ParticipatingTeams < 0)
-            {
-                ModelState.AddModelError("Tournament.ParticipatingTeams", "Participating teams cannot be negative.");
-            }
-
-            if (Tournament.ParticipatingTeams > Tournament.MaxTeams && Tournament.MaxTeams > 0)
-            {
-                ModelState.AddModelError("Tournament.ParticipatingTeams", "Participating teams cannot be higher than max teams.");
-            }
-
-            if (Tournament.PrizeMoney < 0)
-            {
-                ModelState.AddModelError("Tournament.PrizeMoney", "Prize money cannot be negative.");
-            }
-
-            if (!SelectedDate.HasValue)
-            {
-                ModelState.AddModelError("SelectedDate", "Please select a date.");
-            }
-
-            if (!SelectedTime.HasValue)
-            {
-                ModelState.AddModelError("SelectedTime", "Please select a time.");
-            }
-
-            if (!ModelState.IsValid)
-            {
+                ModelState.AddModelError(string.Empty, "Select a valid date and time.");
                 return Page();
             }
 
-            DateTime selectedDate = SelectedDate!.Value;
-            TimeSpan selectedTime = SelectedTime!.Value;
+            // Roep nu de service correct aan binnen een methode
+            _tournamentService.CreateTournament(
+                Tournament,
+                SelectedDate.Value,
+                SelectedTime.Value
+            );
 
-            try
-            {
-                var combinedDateTime = selectedDate.Date + selectedTime;
-                Tournament.Datum = DateTime.SpecifyKind(combinedDateTime, DateTimeKind.Utc);
-            }
-            catch
-            {
-                ModelState.AddModelError(string.Empty, "The selected date or time is not valid.");
-                return Page();
-            }
-
-            Tournament.Status = "Open";
-
-            _context.Tournaments.Add(Tournament);
-            _context.SaveChanges();
-
-            return Redirect("/tournaments");
+            return RedirectToPage("/Tournaments/TournamentIndex");
         }
     }
 }

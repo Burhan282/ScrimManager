@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ScrimManager.Data;
-using ScrimManager.Models;
+using ScrimManager.Domain;
 using System.Linq;
 
 namespace ScrimManager.Pages.Tournaments

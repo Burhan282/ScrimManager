@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ScrimManager.Models
+namespace ScrimManager.Domain
 {
     [Table("tournament")]
     public class Tournament
