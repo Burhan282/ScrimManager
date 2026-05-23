@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using ScrimManager.Application;
+using ScrimManager.Application.Interfaces;
 using ScrimManager.Data;
 using ScrimManager.DataAccess;
 
@@ -7,12 +8,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorPages();
 
-
 builder.Services.AddDbContext<ScrimManagerDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-
-builder.Services.AddScoped<TournamentRepository>();
+builder.Services.AddScoped<ITournamentRepository, TournamentRepository>();
 builder.Services.AddScoped<TournamentService>();
 
 var app = builder.Build();

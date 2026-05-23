@@ -1,9 +1,10 @@
-﻿using ScrimManager.Data;
+﻿using ScrimManager.Application.Interfaces;
+using ScrimManager.Data;
 using ScrimManager.Domain;
 
 namespace ScrimManager.DataAccess
 {
-    public class TournamentRepository
+    public class TournamentRepository : ITournamentRepository
     {
         private readonly ScrimManagerDbContext _db;
 
@@ -18,7 +19,7 @@ namespace ScrimManager.DataAccess
             _db.SaveChanges();
         }
 
-        public Tournament FindById(int id)
+        public Tournament? FindById(int id)
         {
             return _db.Tournaments.FirstOrDefault(t => t.Id == id);
         }
@@ -26,6 +27,12 @@ namespace ScrimManager.DataAccess
         public List<Tournament> GetAll()
         {
             return _db.Tournaments.ToList();
+        }
+
+        public void Update(Tournament tournament)
+        {
+            _db.Tournaments.Update(tournament);
+            _db.SaveChanges();
         }
     }
 }

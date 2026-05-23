@@ -1,13 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace ScrimManager.Pages
+namespace ScrimManagerPresentation.Pages
 {
     public class IndexModel : PageModel
     {
-        public IActionResult OnGet()
+        public void OnGet()
         {
-            return Redirect("/Tournaments");
+
         }
     }
 }

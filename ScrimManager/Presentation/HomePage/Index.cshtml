@@ -1,0 +1,127 @@
+﻿@page "/Presentation/Homepage"
+@model ScrimManager.Pages.Presentation.Homepage.IndexModel
+
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #06131f, #0b2740, #12395c);
+        min-height: 100vh;
+    }
+
+    .home-hero {
+        text-align: center;
+        color: white;
+        padding-top: 70px;
+        margin-bottom: 60px;
+    }
+
+        .home-hero h1 {
+            font-size: 58px;
+            font-weight: 900;
+            margin-bottom: 10px;
+        }
+
+        .home-hero p {
+            font-size: 18px;
+            opacity: 0.8;
+        }
+
+    .home-container {
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        flex-wrap: wrap;
+        padding-bottom: 80px;
+    }
+
+    .home-card {
+        width: 360px;
+        background: rgba(255,255,255,0.05);
+        backdrop-filter: blur(12px);
+        border-radius: 22px;
+        overflow: hidden;
+        text-decoration: none;
+        color: white;
+        transition: 0.25s ease;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+        border: 1px solid rgba(255,255,255,0.08);
+    }
+
+        .home-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 22px 55px rgba(0,0,0,0.5);
+        }
+
+    .card-image {
+        width: 100%;
+        height: 220px;
+        overflow: hidden;
+    }
+
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+    .card-info {
+        padding: 24px;
+    }
+
+        .card-info h2 {
+            margin: 0;
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .card-info p {
+            margin: 0;
+            color: rgba(255,255,255,0.75);
+            font-size: 15px;
+            line-height: 1.5;
+        }
+</style>
+
+<div class="home-hero">
+    <h1>Scrim Manager</h1>
+    <p>Manage tournaments, scrims and replays in one place.</p>
+</div>
+
+<div class="home-container">
+
+    <a asp-page="/Presentation/Tournaments/TournamentIndex" class="home-card">
+        <div class="card-image">
+            <img src="~/images/Toernooi.png" alt="Tournaments" />
+        </div>
+
+        <div class="card-info">
+            <h2>Tournaments</h2>
+            <p>Create and join Rocket League tournaments with your team.</p>
+        </div>
+    </a>
+
+    <a asp-page="/Presentation/Scrims/ScrimIndex" class="home-card">
+        <div class="card-image">
+            <img src="~/images/Scrims.png" alt="Scrims" />
+        </div>
+
+        <div class="card-info">
+            <h2>Scrims</h2>
+            <p>Practice against other teams and improve team coordination.</p>
+        </div>
+    </a>
+
+    <a asp-page="/Presentation/Replays/ReplayIndex" class="home-card">
+        <div class="card-image">
+            <img src="~/images/Replays.png" alt="Replays" />
+        </div>
+
+        <div class="card-info">
+            <h2>Replays</h2>
+            <p>Analyze gameplay, statistics and improve your performance.</p>
+        </div>
+    </a>
+
+</div>

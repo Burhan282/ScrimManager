@@ -1,3 +1,5 @@
 <Solution>
-  <Project Path="ScrimManager/ScrimManager.csproj" />
+  <Project Path="ScrimManager/ScrimManagerPresentation.csproj" />
+  <Project Path="ScrimManagerApplication/ScrimManagerApplication.csproj" Id="d7ce59ff-68cd-4f53-8c22-992fe666b228" />
+  <Project Path="ScrimManagerDataAcces/ScrimManagerDataAcces.csproj" Id="999aabbf-2ac0-4319-af2c-d12d354ea27c" />
 </Solution>

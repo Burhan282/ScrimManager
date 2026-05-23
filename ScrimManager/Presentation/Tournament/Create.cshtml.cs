@@ -23,7 +23,7 @@ namespace ScrimManager.Pages.Tournaments
             _tournamentService = tournamentService;
         }
 
-        // ✅ Alles wat uitgevoerd wordt bij POST komt hier
+      
         public IActionResult OnPost()
         {
             if (!SelectedDate.HasValue || !SelectedTime.HasValue)
@@ -32,7 +32,7 @@ namespace ScrimManager.Pages.Tournaments
                 return Page();
             }
 
-            // Roep nu de service correct aan binnen een methode
+            
             _tournamentService.CreateTournament(
                 Tournament,
                 SelectedDate.Value,
