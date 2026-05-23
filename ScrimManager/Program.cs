@@ -9,6 +9,9 @@ builder.Services.AddRazorPages();
 builder.Services.AddScoped<TournamentService>();
 builder.Services.AddScoped<ITournamentRepository, TournamentRepository>();
 
+builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
@@ -21,6 +24,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
 app.UseAuthorization();
 
 app.MapRazorPages();
