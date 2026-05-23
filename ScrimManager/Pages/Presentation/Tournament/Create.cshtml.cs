@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using ScrimManager.Domain;
-using ScrimManager.Application;
+using ScrimManagerApplication.Application;
+using ScrimManagerApplication.Application.Models;
 
 namespace ScrimManager.Pages.Tournaments
 {
@@ -23,7 +23,6 @@ namespace ScrimManager.Pages.Tournaments
             _tournamentService = tournamentService;
         }
 
-      
         public IActionResult OnPost()
         {
             if (!SelectedDate.HasValue || !SelectedTime.HasValue)
@@ -32,14 +31,13 @@ namespace ScrimManager.Pages.Tournaments
                 return Page();
             }
 
-            
             _tournamentService.CreateTournament(
                 Tournament,
                 SelectedDate.Value,
                 SelectedTime.Value
             );
 
-            return RedirectToPage("/Tournaments/TournamentIndex");
+            return RedirectToPage("/Presentation/Tournament/TournamentIndex");
         }
     }
 }

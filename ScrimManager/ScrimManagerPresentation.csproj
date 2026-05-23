@@ -10,4 +10,9 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ScrimManagerApplication\ScrimManagerApplication.csproj" />
+    <ProjectReference Include="..\ScrimManagerDataAcces\ScrimManagerDataAcces.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,7 +1,7 @@
-﻿using ScrimManager.Domain;
-using ScrimManager.Application.Interfaces;
+﻿using ScrimManagerApplication.Application.Interfaces;
+using ScrimManagerApplication.Application.Models;
 
-namespace ScrimManager.Application
+namespace ScrimManagerApplication.Application
 {
     public class TournamentService
     {
@@ -14,12 +14,9 @@ namespace ScrimManager.Application
 
         public void CreateTournament(Tournament tournament, DateTime date, TimeSpan time)
         {
-            // Combine date + time
-            var combined = date.Date + time;
+            var combinedDateTime = date.Date + time;
 
-            // Zet DateTime expliciet op UTC voor EF geen problemen krijgen met tijdzones
-            tournament.Datum = DateTime.SpecifyKind(combined, DateTimeKind.Utc);
-            //moet nog aangepast worden feedpulse 20
+            tournament.Datum = combinedDateTime;
             tournament.Status = "Open";
 
             _repository.Add(tournament);
@@ -28,11 +25,11 @@ namespace ScrimManager.Application
         public List<Tournament> GetTournaments()
         {
             return _repository.GetAll()
-                .OrderBy(t => t.Datum)
+                .OrderBy(tournament => tournament.Datum)
                 .ToList();
         }
 
-        public void JoinTournament(int tournamentId) //moet nog aangepast worden. 
+        public void JoinTournament(int tournamentId)
         {
             var tournament = _repository.FindById(tournamentId);
 
@@ -41,12 +38,14 @@ namespace ScrimManager.Application
                 return;
             }
 
-            if (tournament.ParticipatingTeams < tournament.MaxTeams)
+            if (tournament.ParticipatingTeams >= tournament.MaxTeams)
             {
-                tournament.ParticipatingTeams += 1;
-
-                _repository.Update(tournament);
+                return;
             }
+
+            tournament.ParticipatingTeams++;
+
+            _repository.Update(tournament);
         }
     }
 }

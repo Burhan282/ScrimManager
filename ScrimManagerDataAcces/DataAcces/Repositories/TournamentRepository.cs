@@ -1,38 +1,142 @@
-﻿using ScrimManager.Application.Interfaces;
-using ScrimManager.Data;
-using ScrimManager.Domain;
+﻿using Npgsql;
+using ScrimManagerApplication.Application.Interfaces;
+using ScrimManagerApplication.Application.Models;
 
-namespace ScrimManager.DataAccess
+namespace ScrimManagerDataAccess
 {
     public class TournamentRepository : ITournamentRepository
     {
-        private readonly ScrimManagerDbContext _db;
-
-        public TournamentRepository(ScrimManagerDbContext db)
-        {
-            _db = db;
-        }
+        private string connectionString =
+            "Host=localhost;Port=5432;Database=Scrim_Manager;Username=postgres;Password=7434;";
 
         public void Add(Tournament tournament)
         {
-            _db.Tournaments.Add(tournament);
-            _db.SaveChanges();
+            using (NpgsqlConnection conn = new NpgsqlConnection(connectionString))
+            {
+                conn.Open();
+
+                string query = @"INSERT INTO tournament
+                (name, organizer, date, game_format, max_teams, status, description, prize_money, participating_teams)
+                VALUES
+                (@name, @organizer, @date, @gameFormat, @maxTeams, @status, @description, @prizeMoney, @participatingTeams)";
+
+                NpgsqlCommand cmd = new NpgsqlCommand(query, conn);
+
+                cmd.Parameters.AddWithValue("@name", tournament.Naam);
+                cmd.Parameters.AddWithValue("@organizer", tournament.Organisator);
+                cmd.Parameters.AddWithValue("@date", tournament.Datum.Date);
+                cmd.Parameters.AddWithValue("@gameFormat", tournament.Format);
+                cmd.Parameters.AddWithValue("@maxTeams", tournament.MaxTeams);
+                cmd.Parameters.AddWithValue("@status", tournament.Status);
+                cmd.Parameters.AddWithValue("@description", (object?)tournament.Description ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@prizeMoney", (object?)tournament.PrizeMoney ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@participatingTeams", tournament.ParticipatingTeams);
+
+                cmd.ExecuteNonQuery();
+            }
         }
 
         public Tournament? FindById(int id)
         {
-            return _db.Tournaments.FirstOrDefault(t => t.Id == id);
+            using (NpgsqlConnection conn = new NpgsqlConnection(connectionString))
+            {
+                conn.Open();
+
+                string query = "SELECT * FROM tournament WHERE id = @id";
+
+                NpgsqlCommand cmd = new NpgsqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@id", id);
+
+                using (NpgsqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        return MapTournament(reader);
+                    }
+                }
+            }
+
+            return null;
         }
 
         public List<Tournament> GetAll()
         {
-            return _db.Tournaments.ToList();
+            List<Tournament> tournaments = new List<Tournament>();
+
+            using (NpgsqlConnection conn = new NpgsqlConnection(connectionString))
+            {
+                conn.Open();
+
+                string query = "SELECT * FROM tournament";
+
+                NpgsqlCommand cmd = new NpgsqlCommand(query, conn);
+
+                using (NpgsqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        tournaments.Add(MapTournament(reader));
+                    }
+                }
+            }
+
+            return tournaments;
         }
 
         public void Update(Tournament tournament)
         {
-            _db.Tournaments.Update(tournament);
-            _db.SaveChanges();
+            using (NpgsqlConnection conn = new NpgsqlConnection(connectionString))
+            {
+                conn.Open();
+
+                string query = @"UPDATE tournament SET
+                    name = @name,
+                    organizer = @organizer,
+                    date = @date,
+                    game_format = @gameFormat,
+                    max_teams = @maxTeams,
+                    status = @status,
+                    description = @description,
+                    prize_money = @prizeMoney,
+                    participating_teams = @participatingTeams
+                    WHERE id = @id";
+
+                NpgsqlCommand cmd = new NpgsqlCommand(query, conn);
+
+                cmd.Parameters.AddWithValue("@id", tournament.Id);
+                cmd.Parameters.AddWithValue("@name", tournament.Naam);
+                cmd.Parameters.AddWithValue("@organizer", tournament.Organisator);
+                cmd.Parameters.AddWithValue("@date", tournament.Datum.Date);
+                cmd.Parameters.AddWithValue("@gameFormat", tournament.Format);
+                cmd.Parameters.AddWithValue("@maxTeams", tournament.MaxTeams);
+                cmd.Parameters.AddWithValue("@status", tournament.Status);
+                cmd.Parameters.AddWithValue("@description", (object?)tournament.Description ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@prizeMoney", (object?)tournament.PrizeMoney ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@participatingTeams", tournament.ParticipatingTeams);
+
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        private Tournament MapTournament(NpgsqlDataReader reader)
+        {
+            return new Tournament
+            {
+                Id = Convert.ToInt32(reader["id"]),
+                Naam = reader["name"].ToString() ?? "",
+                Organisator = reader["organizer"].ToString() ?? "",
+
+                Datum = reader["date"] is DateOnly dateOnly
+                    ? dateOnly.ToDateTime(TimeOnly.MinValue)
+                    : Convert.ToDateTime(reader["date"]),
+
+                Format = reader["game_format"].ToString() ?? "",
+                MaxTeams = Convert.ToInt32(reader["max_teams"]),
+                Status = reader["status"].ToString() ?? "",
+                Description = reader["description"] == DBNull.Value ? null : reader["description"].ToString(),
+                PrizeMoney = reader["prize_money"] == DBNull.Value ? null : Convert.ToDecimal(reader["prize_money"]),
+                ParticipatingTeams = Convert.ToInt32(reader["participating_teams"])
+            };
         }
     }
 }

@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using ScrimManager.Application;
-using ScrimManager.Domain;
+using ScrimManagerApplication.Application;
+using ScrimManagerApplication.Application.Models;
 
 namespace ScrimManager.Pages.Tournaments
 {
@@ -25,7 +25,7 @@ namespace ScrimManager.Pages.Tournaments
         {
             _tournamentService.JoinTournament(tournamentId);
 
-            return RedirectToPage();
+            return Redirect("/tournaments");
         }
     }
 }

@@ -1,15 +1,12 @@
-﻿using ScrimManager.Domain;
+﻿using ScrimManagerApplication.Application.Models;
 
-namespace ScrimManager.Application.Interfaces
+namespace ScrimManagerApplication.Application.Interfaces
 {
     public interface ITournamentRepository
     {
         void Add(Tournament tournament);
-
         Tournament? FindById(int id);
-
         List<Tournament> GetAll();
-
         void Update(Tournament tournament);
     }
 }
