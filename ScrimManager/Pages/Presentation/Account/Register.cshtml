@@ -2,42 +2,107 @@
 @model ScrimManagerPresentation.Pages.Presentation.Account.RegisterModel
 
 <div class="auth-container">
+
     <div class="auth-card">
 
         <h1>Register</h1>
-        <p class="auth-subtitle">Create your ScrimManager account</p>
+
+        <p class="auth-subtitle">
+            Create your ScrimManager account
+        </p>
 
         <form method="post">
 
-            <div asp-validation-summary="All" class="text-danger mb-3"></div>
-
-            <div class="mb-3">
-                <label asp-for="Username">Username</label>
-                <input asp-for="Username" class="form-control auth-input" />
+            <div asp-validation-summary="All"
+                 class="text-danger mb-3">
             </div>
 
             <div class="mb-3">
-                <label asp-for="Email">Email</label>
-                <input asp-for="Email" type="email" class="form-control auth-input" />
+
+                <label asp-for="Username">
+                    Username
+                </label>
+
+                <input asp-for="Username"
+                       class="form-control auth-input" />
+
             </div>
 
             <div class="mb-3">
-                <label asp-for="Password">Password</label>
-                <input asp-for="Password" type="password" class="form-control auth-input" />
+
+                <label asp-for="Email">
+                    Email
+                </label>
+
+                <input asp-for="Email"
+                       type="email"
+                       class="form-control auth-input" />
+
             </div>
 
             <div class="mb-3">
-                <label asp-for="Role">Role</label>
-                <select asp-for="Role" class="form-control auth-input">
-                    <option value="Player">Player</option>
-                    <option value="Coach">Coach</option>
-                    <option value="Manager">Manager</option>
-                </select>
+
+                <label asp-for="Password">
+                    Password
+                </label>
+
+                <input asp-for="Password"
+                       type="password"
+                       class="form-control auth-input" />
+
+            </div>
+
+            <div class="mb-3">
+
+                <label>
+                    Roles
+                </label>
+
+                <div class="role-checkbox-group">
+
+                    <label class="role-checkbox">
+
+                        <input type="checkbox"
+                               name="SelectedRoles"
+                               value="Player" />
+
+                        Player
+
+                    </label>
+
+                    <label class="role-checkbox">
+
+                        <input type="checkbox"
+                               name="SelectedRoles"
+                               value="Coach" />
+
+                        Coach
+
+                    </label>
+
+                    <label class="role-checkbox">
+
+                        <input type="checkbox"
+                               name="SelectedRoles"
+                               value="Manager" />
+
+                        Manager
+
+                    </label>
+
+                </div>
+
             </div>
 
             <div class="mb-4">
-                <label asp-for="Rank">Rank</label>
-                <select asp-for="Rank" class="form-control auth-input">
+
+                <label asp-for="Rank">
+                    Rank
+                </label>
+
+                <select asp-for="Rank"
+                        class="form-control auth-input">
+
                     <option value="BronzeI">Bronze I</option>
                     <option value="BronzeII">Bronze II</option>
                     <option value="BronzeIII">Bronze III</option>
@@ -62,19 +127,35 @@
                     <option value="ChampionII">Champion II</option>
                     <option value="ChampionIII">Champion III</option>
 
-                    <option value="GrandChampionI">Grand Champion I</option>
-                    <option value="GrandChampionII">Grand Champion II</option>
-                    <option value="GrandChampionIII">Grand Champion III</option>
+                    <option value="GrandChampionI">
+                        Grand Champion I
+                    </option>
 
-                    <option value="SupersonicLegend">Supersonic Legend</option>
+                    <option value="GrandChampionII">
+                        Grand Champion II
+                    </option>
+
+                    <option value="GrandChampionIII">
+                        Grand Champion III
+                    </option>
+
+                    <option value="SupersonicLegend">
+                        Supersonic Legend
+                    </option>
+
                 </select>
+
             </div>
 
-            <button type="submit" class="btn auth-button w-100">
+            <button type="submit"
+                    class="btn auth-button w-100">
+
                 Register
+
             </button>
 
         </form>
 
     </div>
+
 </div>

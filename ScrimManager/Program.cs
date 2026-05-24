@@ -5,6 +5,7 @@ using ScrimManagerDataAccess;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorPages();
+builder.Services.AddSession();
 
 builder.Services.AddScoped<TournamentService>();
 builder.Services.AddScoped<ITournamentRepository, TournamentRepository>();
@@ -24,6 +25,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseSession();
 
 app.UseAuthorization();
 

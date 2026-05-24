@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ScrimManagerApplication.Application;
 using ScrimManagerApplication.Application.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace ScrimManagerPresentation.Pages.Presentation.Account
 {
@@ -24,7 +25,7 @@ namespace ScrimManagerPresentation.Pages.Presentation.Account
         public string Password { get; set; } = string.Empty;
 
         [BindProperty]
-        public Role Role { get; set; }
+        public List<string> SelectedRoles { get; set; } = new();
 
         [BindProperty]
         public Rank Rank { get; set; }
@@ -36,12 +37,16 @@ namespace ScrimManagerPresentation.Pages.Presentation.Account
 
         public IActionResult OnPost()
         {
+            string roles = string.Join(",", SelectedRoles);
+
             _authService.Register(
                 Username,
                 Email,
                 Password,
-                Role,
+                roles,
                 Rank);
+
+            HttpContext.Session.SetString("Username", Username);
 
             return RedirectToPage("/Presentation/HomePage/Index");
         }

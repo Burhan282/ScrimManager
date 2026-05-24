@@ -151,3 +151,37 @@ select.auth-input {
         background: #1d8cff !important;
         color: white !important;
     }
+
+
+.scrim-dropdown {
+    background: #071827;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 12px;
+    padding: 6px;
+    margin-top: 10px;
+}
+
+    .scrim-dropdown .dropdown-item {
+        color: white;
+        border-radius: 8px;
+        transition: 0.2s;
+        padding: 10px 14px;
+    }
+
+        .scrim-dropdown .dropdown-item:hover {
+            background: #102b44;
+            color: #4da3ff;
+        }
+.role-checkbox-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.role-checkbox {
+    background: #102b44;
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: 10px 14px;
+    border-radius: 12px;
+    cursor: pointer;
+}

@@ -16,7 +16,7 @@ namespace ScrimManagerApplication.Application
             string username,
             string email,
             string password,
-            Role role,
+            string roles,
             Rank rank)
         {
             User user = new User();
@@ -24,10 +24,15 @@ namespace ScrimManagerApplication.Application
             user.Username = username;
             user.Email = email;
             user.PasswordHash = password;
-            user.Role = role;
+            user.Role = roles;
             user.Rank = rank;
 
             _userRepository.Add(user);
+        }
+
+        public User? Login(string email, string password)
+        {
+            return _userRepository.GetByEmailAndPassword(email, password);
         }
     }
 }
