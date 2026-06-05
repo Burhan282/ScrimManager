@@ -8,10 +8,20 @@ builder.Services.AddRazorPages();
 builder.Services.AddSession();
 
 builder.Services.AddScoped<TournamentService>();
-builder.Services.AddScoped<ITournamentRepository, TournamentRepository>();
+
+builder.Services.AddScoped<ITournamentRepository>(provider =>
+{
+    string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
+    return new TournamentRepository(connectionString);
+});
 
 builder.Services.AddScoped<AuthService>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+builder.Services.AddScoped<IUserRepository>(provider =>
+{
+    string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
+    return new UserRepository(connectionString);
+});
 
 var app = builder.Build();
 
