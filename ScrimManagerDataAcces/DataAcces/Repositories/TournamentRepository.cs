@@ -17,11 +17,14 @@ namespace ScrimManagerDataAccess
         {
             using NpgsqlConnection conn = new NpgsqlConnection(connectionString);
             conn.Open();
+            
 
-            string query = @"INSERT INTO tournament
-            (name, organizer, date, game_format, max_teams, status, description, prize_money, participating_teams)
-            VALUES
-            (@name, @organizer, @date, @gameFormat, @maxTeams, @status, @description, @prizeMoney, @participatingTeams)";
+            //todo: okay sql query?
+            string query = @"
+                INSERT INTO tournament
+                (name, organizer, date, game_format, max_teams, status, description, prize_money, participating_teams) VALUES
+                (@name, @organizer, @date, @gameFormat, @maxTeams, @status, @description, @prizeMoney, @participatingTeams)
+            ";
 
             using NpgsqlCommand cmd = new NpgsqlCommand(query, conn);
 

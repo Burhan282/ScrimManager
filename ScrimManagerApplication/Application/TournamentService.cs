@@ -5,11 +5,11 @@ namespace ScrimManagerApplication.Application
 {
     public class TournamentService
     {
-        private readonly ITournamentRepository _repository;
+        private readonly ITournamentRepository _tournamentRepository;
 
-        public TournamentService(ITournamentRepository repository)
+        public TournamentService(ITournamentRepository tournamentRepository)
         {
-            _repository = repository;
+            _tournamentRepository = tournamentRepository;
         }
 
         public void CreateTournament(Tournament tournament, DateTime date, TimeSpan time)
@@ -19,19 +19,19 @@ namespace ScrimManagerApplication.Application
             tournament.Datum = combinedDateTime;
             tournament.Status = "Open";
 
-            _repository.Add(tournament);
+            _tournamentRepository.Add(tournament);
         }
 
         public List<Tournament> GetTournaments()
         {
-            return _repository.GetAll()
+            return _tournamentRepository.GetAll()
                 .OrderBy(tournament => tournament.Datum)
                 .ToList();
         }
-
+        //join functionaliteit is nog niet goed
         public void JoinTournament(int tournamentId)
         {
-            var tournament = _repository.FindById(tournamentId);
+            var tournament = _tournamentRepository.FindById(tournamentId);
 
             if (tournament == null)
             {
@@ -45,7 +45,7 @@ namespace ScrimManagerApplication.Application
 
             tournament.ParticipatingTeams++;
 
-            _repository.Update(tournament);
+            _tournamentRepository.Update(tournament);
         }
     }
 }

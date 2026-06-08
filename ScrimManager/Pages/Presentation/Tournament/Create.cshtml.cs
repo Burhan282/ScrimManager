@@ -23,11 +23,12 @@ namespace ScrimManager.Pages.Tournaments
             _tournamentService = tournamentService;
         }
 
+
         public IActionResult OnPost()
         {
             if (!SelectedDate.HasValue || !SelectedTime.HasValue)
             {
-                ModelState.AddModelError(string.Empty, "Select a valid date and time.");
+                ModelState.AddModelError(string.Empty, "Select a valid date and time."); 
                 return Page();
             }
 
@@ -36,7 +37,7 @@ namespace ScrimManager.Pages.Tournaments
                 SelectedDate.Value,
                 SelectedTime.Value
             );
-
+            //service verwerkt en zorgt toernooi wordt aangemaakt. 
             return RedirectToPage("/Presentation/Tournament/TournamentIndex");
         }
     }
