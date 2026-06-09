@@ -25,7 +25,7 @@ namespace ScrimManagerApplication.Application
             user.Email = email;
             user.PasswordHash = password;
             user.Role = roles;
-            user.Rank = rank;
+            user.UserRank = rank;
 
             _userRepository.Add(user);
         }

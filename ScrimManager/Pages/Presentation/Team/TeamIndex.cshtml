@@ -1,0 +1,43 @@
+﻿@page
+@model ScrimManagerPresentation.Pages.Presentation.Team.TeamIndexModel
+
+@{
+    ViewData["Title"] = "Teams";
+}
+
+<div class="teams-header">
+    <div>
+        <h1>🏆 Teams</h1>
+        <p>Bekijk alle teams en sluit je aan bij jouw volgende roster.</p>
+    </div>
+
+    <a asp-page="/Presentation/Team/Create" class="btn-create">
+        + Create Team
+    </a>
+</div>
+
+<div class="teams-grid">
+    @foreach (var team in Model.Teams)
+    {
+        <div class="team-card">
+            <div class="team-banner"></div>
+
+            <div class="team-content">
+                <div class="team-logo">
+                    @team.Name.Substring(0, 1).ToUpper()
+                </div>
+
+                <h3>@team.Name</h3>
+
+                <div class="team-info">
+                    <span>🌍 @team.Teamregion</span>
+                    <span>⭐ @team.Teamrank</span>
+                </div>
+
+                <button type="button" class="join-btn">
+                    Join Team
+                </button>
+            </div>
+        </div>
+    }
+</div>

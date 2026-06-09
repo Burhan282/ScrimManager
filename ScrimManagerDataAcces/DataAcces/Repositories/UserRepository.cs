@@ -31,7 +31,7 @@ namespace ScrimManagerDataAccess
             cmd.Parameters.AddWithValue("@email", user.Email);
             cmd.Parameters.AddWithValue("@passwordHash", user.PasswordHash);
             cmd.Parameters.AddWithValue("@role", user.Role);
-            cmd.Parameters.AddWithValue("@rank", (int)user.Rank);
+            cmd.Parameters.AddWithValue("@rank", (int)user.UserRank);
 
             cmd.ExecuteNonQuery();
         }
@@ -64,7 +64,7 @@ namespace ScrimManagerDataAccess
                     Email = reader["email"].ToString() ?? "",
                     PasswordHash = reader["password_hash"].ToString() ?? "",
                     Role = reader["role"].ToString() ?? "",
-                    Rank = (Rank)Convert.ToInt32(reader["rank"])
+                    UserRank = (Rank)Convert.ToInt32(reader["rank"])
                 };
             }
 

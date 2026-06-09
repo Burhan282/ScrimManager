@@ -20,69 +20,52 @@
 <body class="scrim-body">
 
     <header>
-
         <nav class="navbar navbar-expand-lg scrim-navbar">
-
             <div class="container">
 
                 <a class="navbar-brand scrim-logo"
                    asp-page="/Presentation/HomePage/Index">
-
                     ScrimManager
-
                 </a>
 
                 <button class="navbar-toggler bg-light"
                         type="button"
                         data-bs-toggle="collapse"
                         data-bs-target="#navbarMenu">
-
                     <span class="navbar-toggler-icon"></span>
-
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbarMenu">
-
                     <ul class="navbar-nav mx-auto">
 
                         <li class="nav-item">
                             <a class="nav-link scrim-link"
                                asp-page="/Presentation/HomePage/Index">
-
                                 Home
-
                             </a>
                         </li>
 
                         <li class="nav-item">
                             <a class="nav-link scrim-link"
                                asp-page="/Presentation/Tournament/TournamentIndex">
-
                                 Tournaments
-
                             </a>
                         </li>
 
                         @if (!string.IsNullOrEmpty(username))
                         {
                             <li class="nav-item">
-
                                 <a class="nav-link scrim-link"
-                                   asp-page="/Presentation/Teams/Index">
-
+                                   asp-page="/Presentation/Team/TeamIndex">
                                     Teams
-
                                 </a>
-
                             </li>
                         }
 
                         <li class="nav-item">
                             <a class="nav-link scrim-link"
                                asp-page="/Privacy">
-
                                 Privacy
-
                             </a>
                         </li>
 
@@ -93,79 +76,53 @@
                         @if (!string.IsNullOrEmpty(username))
                         {
                             <div class="dropdown">
-
                                 <a class="nav-link scrim-link fw-bold dropdown-toggle"
                                    href="#"
                                    role="button"
                                    data-bs-toggle="dropdown"
                                    aria-expanded="false">
-
                                     @username
-
                                 </a>
 
                                 <ul class="dropdown-menu dropdown-menu-end scrim-dropdown">
-
                                     <li>
-
                                         <a class="dropdown-item"
                                            asp-page="/Presentation/Account/Logout">
-
                                             Logout
-
                                         </a>
-
                                     </li>
-
                                 </ul>
-
                             </div>
                         }
                         else
                         {
                             <a class="btn btn-outline-light"
                                asp-page="/Presentation/Account/Login">
-
                                 Login
-
                             </a>
 
                             <a class="btn scrim-register"
                                asp-page="/Presentation/Account/Register">
-
                                 Register
-
                             </a>
                         }
 
                     </div>
-
                 </div>
-
             </div>
-
         </nav>
-
     </header>
 
     <div class="container">
-
         <main role="main" class="pb-3">
-
             @RenderBody()
-
         </main>
-
     </div>
 
     <footer class="scrim-footer">
-
         <div class="container text-center">
-
             &copy; 2026 - ScrimManager
-
         </div>
-
     </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -173,7 +130,5 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
-
 </body>
-
 </html>
