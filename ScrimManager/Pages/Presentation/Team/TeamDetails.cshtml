@@ -1,0 +1,36 @@
+﻿@page
+@model ScrimManagerPresentation.Pages.Presentation.Team.TeamDetailsModel
+
+@{
+    ViewData["Title"] = "Team Details";
+}
+
+<div class="team-details-page">
+    <div class="team-details-card">
+
+        <div class="team-details-banner"></div>
+
+        <div class="team-details-content">
+
+            <div class="team-details-logo">
+                @Model.Team!.Name.Substring(0, 1).ToUpper()
+            </div>
+
+            <h1>@Model.Team.Name</h1>
+
+            <div class="team-details-info">
+                <span>🌍 @Model.Team.Teamregion</span>
+                <span>⭐ @Model.Team.Teamrank</span>
+            </div>
+
+            <p class="team-details-bio">
+                Dit is het teamprofiel van @Model.Team.Name. Hier komen later de spelers, ranks, bio en team statistieken.
+            </p>
+
+            <a asp-page="./TeamIndex" class="back-btn">
+                Back to Teams
+            </a>
+
+        </div>
+    </div>
+</div>

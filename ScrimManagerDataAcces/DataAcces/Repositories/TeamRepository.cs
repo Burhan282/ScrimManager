@@ -3,9 +3,6 @@ using ScrimManagerApplication.Application.Interfaces;
 using ScrimManagerApplication.Application.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ScrimManagerDataAcces.DataAcces.Repositories
 {
@@ -18,7 +15,6 @@ namespace ScrimManagerDataAcces.DataAcces.Repositories
             this.connectionString = connectionString;
         }
 
-
         public void Add(Team team)
         {
             using NpgsqlConnection conn = new NpgsqlConnection(connectionString);
@@ -26,37 +22,40 @@ namespace ScrimManagerDataAcces.DataAcces.Repositories
 
             string query = @"
                 INSERT INTO team
-                (name, region, rank) VALUES
-                (@name, @region, @rank)";
-
+                (name, region, rank, description, logo_data, created_by_user_id)
+                VALUES
+                (@name, @region, @rank, @description, @logo_data, @created_by_user_id)";
 
             using NpgsqlCommand cmd = new NpgsqlCommand(query, conn);
+
             cmd.Parameters.AddWithValue("@name", team.Name);
-            cmd.Parameters.AddWithValue("@region", team.Teamregion);
-            cmd.Parameters.AddWithValue("@rank", team.Teamrank);
+            cmd.Parameters.AddWithValue("@region", team.Teamregion.ToString());
+            cmd.Parameters.AddWithValue("@rank", team.Teamrank.ToString());
+            cmd.Parameters.AddWithValue("@description", team.Description ?? "");
+            cmd.Parameters.AddWithValue("@logo_data", (object?)team.LogoData ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@created_by_user_id", team.CreatedByUserId);
 
             cmd.ExecuteNonQuery();
-
         }
 
         public List<Team> GetAll()
         {
-            List<Team> team = new List<Team>();
+            List<Team> teams = new List<Team>();
 
             using NpgsqlConnection conn = new NpgsqlConnection(connectionString);
             conn.Open();
 
-            string query = "SELECT * FROM team";
+            string query = "SELECT * FROM team ORDER BY id DESC";
 
             using NpgsqlCommand cmd = new NpgsqlCommand(query, conn);
             using NpgsqlDataReader reader = cmd.ExecuteReader();
 
             while (reader.Read())
             {
-                team.Add(MapTeam(reader));
+                teams.Add(MapTeam(reader));
             }
 
-            return team;
+            return teams;
         }
 
         public Team? FindById(int id)
@@ -74,7 +73,6 @@ namespace ScrimManagerDataAcces.DataAcces.Repositories
             if (reader.Read())
             {
                 return MapTeam(reader);
-
             }
 
             return null;
@@ -89,10 +87,9 @@ namespace ScrimManagerDataAcces.DataAcces.Repositories
                 INSERT INTO user_team
                 (user_id, team_id)
                 VALUES
-                (@userId, @teamId";
+                (@userId, @teamId)";
 
             using NpgsqlCommand cmd = new NpgsqlCommand(query, conn);
-
             cmd.Parameters.AddWithValue("@userId", userId);
             cmd.Parameters.AddWithValue("@teamId", teamId);
 
@@ -105,21 +102,12 @@ namespace ScrimManagerDataAcces.DataAcces.Repositories
             {
                 Id = Convert.ToInt32(reader["id"]),
                 Name = reader["name"].ToString() ?? "",
-
-                Teamregion = Enum.Parse<Region>(
-                    reader["region"].ToString() ?? "EU"),
-
-                Teamrank = (Rank)Convert.ToInt32(reader["rank"])
+                Teamregion = Enum.Parse<Region>(reader["region"].ToString() ?? "EU"),
+                Teamrank = Enum.Parse<Rank>(reader["rank"].ToString() ?? "Gold"),
+                Description = reader["description"] == DBNull.Value ? "" : reader["description"].ToString(),
+                LogoData = reader["logo_data"] == DBNull.Value ? null : (byte[])reader["logo_data"],
+                CreatedByUserId = reader["created_by_user_id"] == DBNull.Value ? 0 : Convert.ToInt32(reader["created_by_user_id"])
             };
         }
-
-
-
-
-
-
-
     }
-
-
 }

@@ -7,12 +7,12 @@ namespace ScrimManagerPresentation.Pages.Presentation.Team
     {
         private readonly TeamService _teamService;
 
-        public List<ScrimManagerApplication.Application.Models.Team> Teams { get; set; } = new();
-
         public TeamIndexModel(TeamService teamService)
         {
             _teamService = teamService;
         }
+
+        public List<ScrimManagerApplication.Application.Models.Team> Teams { get; set; } = new();
 
         public void OnGet()
         {

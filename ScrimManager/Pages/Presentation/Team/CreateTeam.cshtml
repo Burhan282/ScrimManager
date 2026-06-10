@@ -1,0 +1,129 @@
+﻿@page
+@model ScrimManagerPresentation.Pages.Presentation.Team.CreateTeamModel
+
+@{
+    ViewData["Title"] = "Create Team";
+}
+
+<div class="create-team-page">
+    <div class="create-team-form">
+        <h1>Create Team</h1>
+        <p class="subtitle">Maak je eigen esports team en voeg logo en bio toe.</p>
+
+        <form method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label asp-for="CreateTeamDTO.Name">Team Name</label>
+                <input asp-for="CreateTeamDTO.Name" id="teamNameInput" class="form-control" placeholder="Predators Esports" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="CreateTeamDTO.Teamregion">Region</label>
+                <select asp-for="CreateTeamDTO.Teamregion" id="regionInput" class="form-control">
+                    <option value="">Select Region</option>
+                    <option value="EU">EU</option>
+                    <option value="NA">NA</option>
+                    <option value="SAM">SAM</option>
+                    <option value="OCE">OCE</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="CreateTeamDTO.Teamrank">Rank</label>
+                <select asp-for="CreateTeamDTO.Teamrank" id="rankInput" class="form-control">
+                    <option value="">Select Rank</option>
+                    <option value="Gold">Gold</option>
+                    <option value="Platinum">Platinum</option>
+                    <option value="Diamond">Diamond</option>
+                    <option value="Champion">Champion</option>
+                    <option value="GrandChampion">Grand Champion</option>
+                    <option value="SSL">SSL</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="CreateTeamDTO.Description">Team Bio</label>
+                <textarea asp-for="CreateTeamDTO.Description" id="bioInput" class="form-control" rows="4" placeholder="Korte omschrijving van je team"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Team Logo</label>
+                <input type="file" asp-for="LogoFile" id="logoInput" class="form-control" accept="image/*" />
+            </div>
+
+            <button type="submit" class="btn-create-team">Create Team</button>
+        </form>
+    </div>
+
+    <div class="team-preview">
+        <h2>Live Preview</h2>
+
+        <div class="preview-card">
+            <div class="preview-banner"></div>
+
+            <div class="preview-content">
+                <div class="preview-logo" id="previewLogo">T</div>
+
+                <h3 id="previewName">Your Team Name</h3>
+                <p id="previewBio">Team bio wordt hier getoond.</p>
+
+                <div class="preview-meta">
+                    <span id="previewRegion">🌍 Region</span>
+                    <span id="previewRank">⭐ Rank</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const teamNameInput = document.getElementById("teamNameInput");
+    const regionInput = document.getElementById("regionInput");
+    const rankInput = document.getElementById("rankInput");
+    const bioInput = document.getElementById("bioInput");
+    const logoInput = document.getElementById("logoInput");
+
+    const previewLogo = document.getElementById("previewLogo");
+    const previewName = document.getElementById("previewName");
+    const previewBio = document.getElementById("previewBio");
+    const previewRegion = document.getElementById("previewRegion");
+    const previewRank = document.getElementById("previewRank");
+
+    teamNameInput.addEventListener("input", () => {
+        const name = teamNameInput.value.trim();
+        previewName.textContent = name || "Your Team Name";
+
+        if (!logoInput.files.length) {
+            previewLogo.textContent = name ? name.charAt(0).toUpperCase() : "T";
+        }
+    });
+
+    regionInput.addEventListener("change", () => {
+        previewRegion.textContent = regionInput.value ? "🌍 " + regionInput.value : "🌍 Region";
+    });
+
+    rankInput.addEventListener("change", () => {
+        previewRank.textContent = rankInput.value ? "⭐ " + rankInput.value : "⭐ Rank";
+    });
+
+    bioInput.addEventListener("input", () => {
+        previewBio.textContent = bioInput.value.trim() || "Team bio wordt hier getoond.";
+    });
+
+    logoInput.addEventListener("change", () => {
+        const file = logoInput.files[0];
+
+        if (!file) {
+            const name = teamNameInput.value.trim();
+            previewLogo.textContent = name ? name.charAt(0).toUpperCase() : "T";
+            return;
+        }
+
+        const reader = new FileReader();
+
+        reader.onload = e => {
+            previewLogo.innerHTML = `<img src="${e.target.result}" alt="Team Logo" />`;
+        };
+
+        reader.readAsDataURL(file);
+    });
+</script>

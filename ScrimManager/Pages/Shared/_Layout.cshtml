@@ -6,7 +6,6 @@
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -18,13 +17,10 @@
 </head>
 
 <body class="scrim-body">
-
     <header>
         <nav class="navbar navbar-expand-lg scrim-navbar">
             <div class="container">
-
-                <a class="navbar-brand scrim-logo"
-                   asp-page="/Presentation/HomePage/Index">
+                <a class="navbar-brand scrim-logo" asp-page="/Presentation/HomePage/Index">
                     ScrimManager
                 </a>
 
@@ -37,42 +33,27 @@
 
                 <div class="collapse navbar-collapse" id="navbarMenu">
                     <ul class="navbar-nav mx-auto">
-
                         <li class="nav-item">
-                            <a class="nav-link scrim-link"
-                               asp-page="/Presentation/HomePage/Index">
-                                Home
-                            </a>
+                            <a class="nav-link scrim-link" asp-page="/Presentation/HomePage/Index">Home</a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link scrim-link"
-                               asp-page="/Presentation/Tournament/TournamentIndex">
-                                Tournaments
-                            </a>
+                            <a class="nav-link scrim-link" asp-page="/Presentation/Tournament/TournamentIndex">Tournaments</a>
                         </li>
 
                         @if (!string.IsNullOrEmpty(username))
                         {
                             <li class="nav-item">
-                                <a class="nav-link scrim-link"
-                                   asp-page="/Presentation/Team/TeamIndex">
-                                    Teams
-                                </a>
+                                <a class="nav-link scrim-link" asp-page="/Presentation/Team/TeamIndex">Teams</a>
                             </li>
                         }
 
                         <li class="nav-item">
-                            <a class="nav-link scrim-link"
-                               asp-page="/Privacy">
-                                Privacy
-                            </a>
+                            <a class="nav-link scrim-link" asp-page="/Privacy">Privacy</a>
                         </li>
-
                     </ul>
 
                     <div class="d-flex gap-2 align-items-center">
-
                         @if (!string.IsNullOrEmpty(username))
                         {
                             <div class="dropdown">
@@ -86,38 +67,25 @@
 
                                 <ul class="dropdown-menu dropdown-menu-end scrim-dropdown">
                                     <li>
-                                        <a class="dropdown-item"
-                                           asp-page="/Presentation/Account/Logout">
-                                            Logout
-                                        </a>
+                                        <a class="dropdown-item" asp-page="/Presentation/Account/Logout">Logout</a>
                                     </li>
                                 </ul>
                             </div>
                         }
                         else
                         {
-                            <a class="btn btn-outline-light"
-                               asp-page="/Presentation/Account/Login">
-                                Login
-                            </a>
-
-                            <a class="btn scrim-register"
-                               asp-page="/Presentation/Account/Register">
-                                Register
-                            </a>
+                            <a class="btn btn-outline-light" asp-page="/Presentation/Account/Login">Login</a>
+                            <a class="btn scrim-register" asp-page="/Presentation/Account/Register">Register</a>
                         }
-
                     </div>
                 </div>
             </div>
         </nav>
     </header>
 
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+    <main class="container py-4">
+        @RenderBody()
+    </main>
 
     <footer class="scrim-footer">
         <div class="container text-center">

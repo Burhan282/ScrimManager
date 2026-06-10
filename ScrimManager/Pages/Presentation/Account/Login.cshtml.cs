@@ -22,7 +22,6 @@ namespace ScrimManagerPresentation.Pages.Presentation.Account
 
         public void OnGet()
         {
-
         }
 
         public IActionResult OnPost()
@@ -31,10 +30,12 @@ namespace ScrimManagerPresentation.Pages.Presentation.Account
 
             if (user == null)
             {
+                ModelState.AddModelError(string.Empty, "Email or password is incorrect.");
                 return Page();
             }
 
             HttpContext.Session.SetString("Username", user.Username);
+            HttpContext.Session.SetInt32("UserId", user.Id);
 
             return RedirectToPage("/Presentation/HomePage/Index");
         }

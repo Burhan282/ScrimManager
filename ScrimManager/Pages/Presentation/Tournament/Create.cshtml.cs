@@ -1,16 +1,16 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ScrimManagerApplication.Application;
-using ScrimManagerApplication.Application.Models;
+using TournamentModel = ScrimManagerApplication.Application.Models.Tournament;
 
-namespace ScrimManager.Pages.Tournaments
+namespace ScrimManagerPresentation.Pages.Presentation.Tournament
 {
     public class CreateModel : PageModel
     {
         private readonly TournamentService _tournamentService;
 
         [BindProperty]
-        public Tournament Tournament { get; set; } = new Tournament();
+        public TournamentModel Tournament { get; set; } = new TournamentModel();
 
         [BindProperty]
         public DateTime? SelectedDate { get; set; }
@@ -23,12 +23,11 @@ namespace ScrimManager.Pages.Tournaments
             _tournamentService = tournamentService;
         }
 
-
         public IActionResult OnPost()
         {
             if (!SelectedDate.HasValue || !SelectedTime.HasValue)
             {
-                ModelState.AddModelError(string.Empty, "Select a valid date and time."); 
+                ModelState.AddModelError(string.Empty, "Select a valid date and time.");
                 return Page();
             }
 
@@ -37,7 +36,7 @@ namespace ScrimManager.Pages.Tournaments
                 SelectedDate.Value,
                 SelectedTime.Value
             );
-            //service verwerkt en zorgt toernooi wordt aangemaakt. 
+
             return RedirectToPage("/Presentation/Tournament/TournamentIndex");
         }
     }

@@ -1,11 +1,7 @@
 ﻿using ScrimManagerApplication.Application.Interfaces;
 using ScrimManagerApplication.Application.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ScrimManagerApplication.Application.Models.DTOModels;
+using System.Collections.Generic;
 
 namespace ScrimManagerApplication.Application
 {
@@ -17,19 +13,30 @@ namespace ScrimManagerApplication.Application
         {
             _teamRepository = teamRepository;
         }
-        public void CreateTeam(CreateTeamDTO dto)
-        {
-            Team team = new Team();
 
-            team.Name = dto.Name;
-            team.Teamregion = dto.Teamregion;
-            team.Teamrank = dto.Teamrank;
+        public void CreateTeam(CreateTeamDTO dto, int userId)
+        {
+            Team team = new Team
+            {
+                Name = dto.Name,
+                Teamregion = dto.Teamregion,
+                Teamrank = dto.Teamrank,
+                Description = dto.Description,
+                LogoData = dto.LogoData,
+                CreatedByUserId = userId
+            };
 
             _teamRepository.Add(team);
         }
+
         public List<Team> GetTeams()
         {
             return _teamRepository.GetAll();
+        }
+
+        public Team? GetTeamById(int id)
+        {
+            return _teamRepository.FindById(id);
         }
     }
 }
