@@ -24,32 +24,27 @@ namespace ScrimManagerPresentation.Pages.Presentation.Team
 
         public async Task<IActionResult> OnPostAsync()
         {
-            // Zorg dat de userId correct wordt opgehaald
             int? userId = HttpContext.Session.GetInt32("UserId");
 
-            if (userId == null || userId.Value <= 0)
+            if (userId == null || userId <= 0)
             {
                 return RedirectToPage("/Presentation/Account/Login");
             }
 
-            // Logo bestand verwerken
             if (LogoFile != null && LogoFile.Length > 0)
             {
-                using MemoryStream memoryStream = new MemoryStream();
+                using var memoryStream = new MemoryStream();
                 await LogoFile.CopyToAsync(memoryStream);
                 CreateTeamDTO.LogoData = memoryStream.ToArray();
             }
 
-            // Model check
             if (!ModelState.IsValid)
             {
                 return Page();
             }
 
-            // Team aanmaken met userId
             _teamService.CreateTeam(CreateTeamDTO, userId.Value);
 
-            // Redirect naar TeamIndex
             return RedirectToPage("/Presentation/Team/TeamIndex");
         }
     }

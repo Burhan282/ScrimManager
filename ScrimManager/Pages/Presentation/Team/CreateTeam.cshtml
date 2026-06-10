@@ -11,6 +11,7 @@
         <p class="subtitle">Maak je eigen esports team en voeg logo en bio toe.</p>
 
         <form method="post" enctype="multipart/form-data">
+            
             <div class="form-group">
                 <label asp-for="CreateTeamDTO.Name">Team Name</label>
                 <input asp-for="CreateTeamDTO.Name" id="teamNameInput" class="form-control" placeholder="Predators Esports" />
@@ -27,19 +28,31 @@
                 </select>
             </div>
 
+            
             <div class="form-group">
                 <label asp-for="CreateTeamDTO.Teamrank">Rank</label>
                 <select asp-for="CreateTeamDTO.Teamrank" id="rankInput" class="form-control">
                     <option value="">Select Rank</option>
-                    <option value="Gold">Gold</option>
-                    <option value="Platinum">Platinum</option>
-                    <option value="Diamond">Diamond</option>
-                    <option value="Champion">Champion</option>
-                    <option value="GrandChampion">Grand Champion</option>
-                    <option value="SSL">SSL</option>
+                    <option value="GoldI">Gold I</option>
+                    <option value="GoldII">Gold II</option>
+                    <option value="GoldIII">Gold III</option>
+                    <option value="PlatinumI">Platinum I</option>
+                    <option value="PlatinumII">Platinum II</option>
+                    <option value="PlatinumIII">Platinum III</option>
+                    <option value="DiamondI">Diamond I</option>
+                    <option value="DiamondII">Diamond II</option>
+                    <option value="DiamondIII">Diamond III</option>
+                    <option value="ChampionI">Champion I</option>
+                    <option value="ChampionII">Champion II</option>
+                    <option value="ChampionIII">Champion III</option>
+                    <option value="GrandChampionI">Grand Champion I</option>
+                    <option value="GrandChampionII">Grand Champion II</option>
+                    <option value="GrandChampionIII">Grand Champion III</option>
+                    <option value="SSL">Supersonic Legend</option>
                 </select>
             </div>
 
+            
             <div class="form-group">
                 <label asp-for="CreateTeamDTO.Description">Team Bio</label>
                 <textarea asp-for="CreateTeamDTO.Description" id="bioInput" class="form-control" rows="4" placeholder="Korte omschrijving van je team"></textarea>
@@ -54,18 +67,15 @@
         </form>
     </div>
 
+    
     <div class="team-preview">
         <h2>Live Preview</h2>
-
         <div class="preview-card">
             <div class="preview-banner"></div>
-
             <div class="preview-content">
                 <div class="preview-logo" id="previewLogo">T</div>
-
                 <h3 id="previewName">Your Team Name</h3>
                 <p id="previewBio">Team bio wordt hier getoond.</p>
-
                 <div class="preview-meta">
                     <span id="previewRegion">🌍 Region</span>
                     <span id="previewRank">⭐ Rank</span>
@@ -91,39 +101,36 @@
     teamNameInput.addEventListener("input", () => {
         const name = teamNameInput.value.trim();
         previewName.textContent = name || "Your Team Name";
-
-        if (!logoInput.files.length) {
-            previewLogo.textContent = name ? name.charAt(0).toUpperCase() : "T";
-        }
+        if (!logoInput.files.length) previewLogo.textContent = name ? name.charAt(0).toUpperCase() : "T";
     });
 
+    
     regionInput.addEventListener("change", () => {
         previewRegion.textContent = regionInput.value ? "🌍 " + regionInput.value : "🌍 Region";
     });
 
+    
     rankInput.addEventListener("change", () => {
-        previewRank.textContent = rankInput.value ? "⭐ " + rankInput.value : "⭐ Rank";
+        previewRank.textContent = rankInput.value
+            ? "⭐ " + rankInput.options[rankInput.selectedIndex].text
+            : "⭐ Rank";
     });
 
+   
     bioInput.addEventListener("input", () => {
         previewBio.textContent = bioInput.value.trim() || "Team bio wordt hier getoond.";
     });
 
+    
     logoInput.addEventListener("change", () => {
         const file = logoInput.files[0];
-
         if (!file) {
             const name = teamNameInput.value.trim();
             previewLogo.textContent = name ? name.charAt(0).toUpperCase() : "T";
             return;
         }
-
         const reader = new FileReader();
-
-        reader.onload = e => {
-            previewLogo.innerHTML = `<img src="${e.target.result}" alt="Team Logo" />`;
-        };
-
+        reader.onload = e => previewLogo.innerHTML = `<img src="${e.target.result}" alt="Team Logo" />`;
         reader.readAsDataURL(file);
     });
 </script>

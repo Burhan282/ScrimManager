@@ -22,10 +22,12 @@ namespace ScrimManagerPresentation.Pages.Presentation.Account
 
         public void OnGet()
         {
+            
         }
 
         public IActionResult OnPost()
         {
+            
             User? user = _authService.Login(Email, Password);
 
             if (user == null)
@@ -34,6 +36,7 @@ namespace ScrimManagerPresentation.Pages.Presentation.Account
                 return Page();
             }
 
+            
             HttpContext.Session.SetString("Username", user.Username);
             HttpContext.Session.SetInt32("UserId", user.Id);
 

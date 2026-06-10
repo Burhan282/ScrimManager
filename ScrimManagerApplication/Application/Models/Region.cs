@@ -13,6 +13,6 @@ namespace ScrimManagerApplication.Application.Models
         SAM, 
         MENA, 
         APAC,
-
+        OCE
     }
 }

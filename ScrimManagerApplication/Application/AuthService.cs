@@ -12,6 +12,7 @@ namespace ScrimManagerApplication.Application
             _userRepository = userRepository;
         }
 
+        // REGISTRATIE
         public void Register(
             string username,
             string email,
@@ -19,20 +20,34 @@ namespace ScrimManagerApplication.Application
             string roles,
             Rank rank)
         {
-            User user = new User();
-
-            user.Username = username;
-            user.Email = email;
-            user.PasswordHash = password;
-            user.Role = roles;
-            user.UserRank = rank;
+            User user = new User
+            {
+                Username = username,
+                Email = email,
+                PasswordHash = password,
+                Role = roles,
+                UserRank = rank
+            };
 
             _userRepository.Add(user);
         }
 
+        // LOGIN → BELANGRIJK: geeft volledige User terug (incl. Id)
         public User? Login(string email, string password)
         {
-            return _userRepository.GetByEmailAndPassword(email, password);
+            var user = _userRepository.GetByEmailAndPassword(email, password);
+
+            // DEBUG (optioneel)
+            if (user != null)
+            {
+                System.Diagnostics.Debug.WriteLine($"LOGIN OK - USER ID: {user.Id}");
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("LOGIN FAILED");
+            }
+
+            return user;
         }
     }
 }

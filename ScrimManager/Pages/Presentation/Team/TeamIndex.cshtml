@@ -16,17 +16,24 @@
     <div class="teams-grid">
         @foreach (var team in Model.Teams)
         {
-            <div class="team-card">
+            var logoBase64 = "";
+            var hasLogo = team.LogoData != null && team.LogoData.Length > 0;
+
+            if (hasLogo)
+            {
+                logoBase64 = Convert.ToBase64String(team.LogoData!);
+            }
+
+            <div class="team-card"
+                 onclick="openTeamModal('@team.Name', '@team.Teamregion', '@team.Teamrank', '@logoBase64')">
+
                 <div class="team-banner"></div>
 
                 <div class="team-content">
                     <div class="team-logo">
-                        @if (team.LogoData != null && team.LogoData.Length > 0)
+                        @if (hasLogo)
                         {
-                            var base64 = Convert.ToBase64String(team.LogoData);
-                            var imgSrc = $"data:image/png;base64,{base64}";
-
-                            <img src="@imgSrc" alt="Team logo" />
+                            <img src="data:image/png;base64,@logoBase64" alt="Team logo" />
                         }
                         else
                         {
@@ -41,13 +48,62 @@
                         <span>⭐ @team.Teamrank</span>
                     </div>
 
-                    <form method="post" asp-page-handler="Join" asp-route-id="@team.Id">
-                        <button type="submit" class="join-btn">
-                            Apply Team
-                        </button>
-                    </form>
+                    <button type="button" class="join-btn">
+                        Apply Team
+                    </button>
                 </div>
             </div>
         }
     </div>
 </div>
+
+<div id="teamModal" class="team-modal">
+    <div class="team-modal-card">
+        <button type="button" class="team-modal-close" onclick="closeTeamModal()">×</button>
+
+        <div class="team-details-banner"></div>
+
+        <div class="team-details-content">
+            <div id="modalLogo" class="team-details-logo"></div>
+
+            <h1 id="modalName"></h1>
+
+            <div class="team-details-info">
+                <span id="modalRegion"></span>
+                <span id="modalRank"></span>
+            </div>
+
+            <p class="team-details-bio">
+                Dit is het teamprofiel. Hier komen later de spelers, bio en team statistieken.
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openTeamModal(name, region, rank, logoBase64) {
+        document.getElementById("modalName").innerText = name;
+        document.getElementById("modalRegion").innerText = "🌍 " + region;
+        document.getElementById("modalRank").innerText = "⭐ " + rank;
+
+        const modalLogo = document.getElementById("modalLogo");
+
+        if (logoBase64 && logoBase64.length > 0) {
+            modalLogo.innerHTML = `<img src="data:image/png;base64,${logoBase64}" alt="Team logo" />`;
+        } else {
+            modalLogo.innerText = name.substring(0, 1).toUpperCase();
+        }
+
+        document.getElementById("teamModal").classList.add("show");
+    }
+
+    function closeTeamModal() {
+        document.getElementById("teamModal").classList.remove("show");
+    }
+
+    document.getElementById("teamModal").addEventListener("click", function (event) {
+        if (event.target === this) {
+            closeTeamModal();
+        }
+    });
+</script>
