@@ -613,7 +613,7 @@ body.scrim-body {
         color: #7b8190;
     }
 
-/* OLD TEAM DETAILS FALLBACK */
+
 .team-details-page {
     max-width: 900px;
     margin: 0 auto;
@@ -697,7 +697,6 @@ body.scrim-body {
         transform: translateY(-2px);
     }
 
-/* RESPONSIVE */
 @media (max-width: 900px) {
     .teams-header {
         display: block;
@@ -734,11 +733,116 @@ body.scrim-body {
     }
 }
 
-/* FOCUS FIX */
 .team-row-card:focus,
 .team-row-btn:focus,
 .btn-create:focus,
 .btn-create-team:focus {
     outline: none !important;
     box-shadow: none !important;
+}
+
+.auth-register-page {
+    max-width: 1250px;
+    margin: 0 auto;
+    padding: 40px 25px 80px;
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+    gap: 40px;
+    align-items: start;
+}
+
+    .auth-register-page .auth-card {
+        max-width: none;
+    }
+
+.register-preview {
+    width: 100%;
+}
+
+    .register-preview h2 {
+        font-size: 34px;
+        font-weight: 900;
+        color: white;
+        margin-bottom: 14px;
+    }
+
+.register-preview-card {
+    background: #1e293b;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 12px 30px rgba(0,0,0,.30);
+}
+
+.register-preview-banner {
+    height: 120px;
+    background: linear-gradient(135deg,#2563eb,#7c3aed,#ec4899);
+}
+
+.register-preview-content {
+    padding: 20px;
+    text-align: center;
+}
+
+.register-preview-logo {
+    width: 80px;
+    height: 80px;
+    background: white;
+    color: #2563eb;
+    border-radius: 50%;
+    border: 4px solid #1e293b;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 34px;
+    font-weight: 900;
+    margin: -60px auto 15px auto;
+    overflow: hidden;
+    position: relative;
+    z-index: 5;
+}
+
+    .register-preview-logo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+
+.register-preview-content h3 {
+    color: white;
+    font-size: 26px;
+    font-weight: 900;
+    margin-bottom: 10px;
+}
+
+.register-preview-content p {
+    color: #cbd5e1;
+    margin-bottom: 16px;
+}
+
+.register-preview-meta {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    color: #cbd5e1;
+    flex-wrap: wrap;
+}
+
+.register-preview-rank {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+    .register-preview-rank img {
+        width: 22px;
+        height: 22px;
+        object-fit: contain;
+    }
+
+@media (max-width: 900px) {
+    .auth-register-page {
+        grid-template-columns: 1fr;
+        padding: 25px 15px;
+    }
 }

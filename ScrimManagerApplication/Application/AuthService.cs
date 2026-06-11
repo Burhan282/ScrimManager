@@ -1,5 +1,6 @@
 ﻿using ScrimManagerApplication.Application.Interfaces;
 using ScrimManagerApplication.Application.Models;
+using ScrimManagerApplication.Application.Models.DTOModels;
 
 namespace ScrimManagerApplication.Application
 {
@@ -13,20 +14,19 @@ namespace ScrimManagerApplication.Application
         }
 
         
-        public void Register(
-            string username,
-            string email,
-            string password,
-            string roles,
-            Rank rank)
+        public void Register(CreateUserDTO dto)
+            
         {
             User user = new User
             {
-                Username = username,
-                Email = email,
-                PasswordHash = password,
-                Role = roles,
-                UserRank = rank
+               Username = dto.Username,
+               Email = dto.Email,
+               PasswordHash = dto.PasswordHash,
+               UserRegion = dto.UserRegion,
+               UserRole = dto.UserRole,
+               UserRank = dto.UserRank,
+               UserLogo = dto.UserLogo
+
             };
 
             _userRepository.Add(user);

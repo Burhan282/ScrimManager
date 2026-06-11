@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using ScrimManagerApplication.Application;
 using ScrimManagerApplication.Application.Models;
 using Microsoft.AspNetCore.Http;
+using ScrimManagerApplication.Application.Models.DTOModels;
 
 namespace ScrimManagerPresentation.Pages.Presentation.Account
 {
@@ -16,37 +17,28 @@ namespace ScrimManagerPresentation.Pages.Presentation.Account
         }
 
         [BindProperty]
-        public string Username { get; set; } = string.Empty;
+        public CreateUserDTO CreateUserDTO { get; set; } = new();
 
         [BindProperty]
-        public string Email { get; set; } = string.Empty;
-
-        [BindProperty]
-        public string Password { get; set; } = string.Empty;
-
-        [BindProperty]
-        public List<string> SelectedRoles { get; set; } = new();
-
-        [BindProperty]
-        public Rank Rank { get; set; }
+        public IFormFile? LogoFile { get; set; }
 
         public void OnGet()
         {
 
         }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
-            string roles = string.Join(",", SelectedRoles);
+           if (LogoFile != null && LogoFile.Length > 0)
+            {
+                using var memoryStream = new MemoryStream();
+                await LogoFile.CopyToAsync(memoryStream);
+                CreateUserDTO.UserLogo = memoryStream.ToArray();
+            }
 
-            _authService.Register(
-                Username,
-                Email,
-                Password,
-                roles,
-                Rank);
-
-            HttpContext.Session.SetString("Username", Username);
+            _authService.Register(CreateUserDTO);
+                
+            
 
             return RedirectToPage("/Presentation/HomePage/Index");
         }

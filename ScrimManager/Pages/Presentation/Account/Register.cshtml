@@ -1,108 +1,33 @@
 ﻿@page
 @model ScrimManagerPresentation.Pages.Presentation.Account.RegisterModel
 
-<div class="auth-container">
+<div class="auth-register-page">
 
     <div class="auth-card">
-
         <h1>Register</h1>
+        <p class="auth-subtitle">Create your ScrimManager account</p>
 
-        <p class="auth-subtitle">
-            Create your ScrimManager account
-        </p>
+        <form method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="All" class="text-danger mb-3"></div>
 
-        <form method="post">
-
-            <div asp-validation-summary="All"
-                 class="text-danger mb-3">
+            <div class="mb-3">
+                <label asp-for="CreateUserDTO.Username">Username</label>
+                <input asp-for="CreateUserDTO.Username" class="form-control auth-input" id="usernameInput" />
             </div>
 
             <div class="mb-3">
-
-                <label asp-for="Username">
-                    Username
-                </label>
-
-                <input asp-for="Username"
-                       class="form-control auth-input" />
-
+                <label asp-for="CreateUserDTO.Email">Email</label>
+                <input asp-for="CreateUserDTO.Email" type="email" class="form-control auth-input" id="emailInput" />
             </div>
 
             <div class="mb-3">
-
-                <label asp-for="Email">
-                    Email
-                </label>
-
-                <input asp-for="Email"
-                       type="email"
-                       class="form-control auth-input" />
-
-            </div>
-
-            <div class="mb-3">
-
-                <label asp-for="Password">
-                    Password
-                </label>
-
-                <input asp-for="Password"
-                       type="password"
-                       class="form-control auth-input" />
-
-            </div>
-
-            <div class="mb-3">
-
-                <label>
-                    Roles
-                </label>
-
-                <div class="role-checkbox-group">
-
-                    <label class="role-checkbox">
-
-                        <input type="checkbox"
-                               name="SelectedRoles"
-                               value="Player" />
-
-                        Player
-
-                    </label>
-
-                    <label class="role-checkbox">
-
-                        <input type="checkbox"
-                               name="SelectedRoles"
-                               value="Coach" />
-
-                        Coach
-
-                    </label>
-
-                    <label class="role-checkbox">
-
-                        <input type="checkbox"
-                               name="SelectedRoles"
-                               value="Manager" />
-
-                        Manager
-
-                    </label>
-
-                </div>
-
+                <label asp-for="CreateUserDTO.PasswordHash">Password</label>
+                <input asp-for="CreateUserDTO.PasswordHash" type="password" class="form-control auth-input" />
             </div>
 
             <div class="mb-4">
-
-                <label asp-for="Rank">
-                    Rank
-                </label>
-
-                <select asp-for="Rank"
-                        class="form-control auth-input">
-
+                <label asp-for="CreateUserDTO.UserRank">Rank</label>
+                <select asp-for="CreateUserDTO.UserRank" class="form-control auth-input" id="rankInput">
                     <option value="BronzeI">Bronze I</option>
                     <option value="BronzeII">Bronze II</option>
                     <option value="BronzeIII">Bronze III</option>
@@ -127,35 +52,71 @@
                     <option value="ChampionII">Champion II</option>
                     <option value="ChampionIII">Champion III</option>
 
-                    <option value="GrandChampionI">
-                        Grand Champion I
-                    </option>
+                    <option value="GrandChampionI">Grand Champion I</option>
+                    <option value="GrandChampionII">Grand Champion II</option>
+                    <option value="GrandChampionIII">Grand Champion III</option>
 
-                    <option value="GrandChampionII">
-                        Grand Champion II
-                    </option>
-
-                    <option value="GrandChampionIII">
-                        Grand Champion III
-                    </option>
-
-                    <option value="SupersonicLegend">
-                        Supersonic Legend
-                    </option>
-
+                    <option value="SupersonicLegend">Supersonic Legend</option>
                 </select>
-
             </div>
 
-            <button type="submit"
-                    class="btn auth-button w-100">
+            <div class="mb-4">
+                <label>Upload Logo</label>
+                <input asp-for="LogoFile" type="file" class="form-control auth-input" accept="image/*" id="logoInput" />
+            </div>
 
-                Register
-
-            </button>
-
+            <button type="submit" class="btn auth-button w-100">Register</button>
         </form>
-
     </div>
 
+    <div class="live-preview">
+        <h2>Live Preview</h2>
+        <div class="preview-card">
+            <div class="preview-banner"></div>
+            <div class="preview-content">
+                <div class="preview-logo" id="previewLogo">U</div>
+                <h3 id="previewUsername">Your Username</h3>
+                <p id="previewEmail">Email wordt hier getoond</p>
+                <div class="preview-meta">
+                    <span id="previewRank">⭐ Rank</span>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script>
+    const usernameInput = document.getElementById("usernameInput");
+    const emailInput = document.getElementById("emailInput");
+    const rankInput = document.getElementById("rankInput");
+    const logoInput = document.getElementById("logoInput");
+
+    const previewUsername = document.getElementById("previewUsername");
+    const previewEmail = document.getElementById("previewEmail");
+    const previewRank = document.getElementById("previewRank");
+    const previewLogo = document.getElementById("previewLogo");
+
+    usernameInput.addEventListener("input", () => {
+        previewUsername.textContent = usernameInput.value || "Your Username";
+        if(!logoInput.files.length) previewLogo.textContent = usernameInput.value.charAt(0).toUpperCase() || "U";
+    });
+
+    emailInput.addEventListener("input", () => {
+        previewEmail.textContent = emailInput.value || "Email wordt hier getoond";
+    });
+
+    rankInput.addEventListener("change", () => {
+        previewRank.textContent = "⭐ " + rankInput.options[rankInput.selectedIndex].text;
+    });
+
+    logoInput.addEventListener("change", () => {
+        const file = logoInput.files[0];
+        if (!file) {
+            previewLogo.textContent = usernameInput.value.charAt(0).toUpperCase() || "U";
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = e => previewLogo.innerHTML = `<img src="${e.target.result}" alt="Logo" />`;
+        reader.readAsDataURL(file);
+    });
+</script>
