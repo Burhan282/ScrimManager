@@ -1,36 +1,154 @@
-﻿@page
+﻿@page "{id:int}"
 @model ScrimManagerPresentation.Pages.Presentation.Team.TeamDetailsModel
 
 @{
     ViewData["Title"] = "Team Details";
 }
 
-<div class="team-details-page">
-    <div class="team-details-card">
+@functions {
+    public string GetRankImage(string rank)
+    {
+        return rank switch
+        {
+            "BronzeI" => "/Images/Ranks/Bronze 1.webp",
+            "BronzeII" => "/Images/Ranks/Bronze 2.jpg",
+            "BronzeIII" => "/Images/Ranks/Bronze 3.webp",
+            "SilverI" => "/Images/Ranks/Silver 1.png",
+            "SilverII" => "/Images/Ranks/Silver 2.png",
+            "SilverIII" => "/Images/Ranks/Silver 3.jpg",
+            "GoldI" => "/Images/Ranks/Gold 1.webp",
+            "GoldII" => "/Images/Ranks/Gold 2.jpg",
+            "GoldIII" => "/Images/Ranks/Gold 3.png",
+            "PlatinumI" => "/Images/Ranks/Plat 1.png",
+            "PlatinumII" => "/Images/Ranks/Plat 2.png",
+            "PlatinumIII" => "/Images/Ranks/PLat 3.webp",
+            "DiamondI" => "/Images/Ranks/Diamond 1.png",
+            "DiamondII" => "/Images/Ranks/Diamond 2.png",
+            "DiamondIII" => "/Images/Ranks/Diamond 3.png",
+            "ChampionI" => "/Images/Ranks/Champion 1.webp",
+            "ChampionII" => "/Images/Ranks/Champion 2.webp",
+            "ChampionIII" => "/Images/Ranks/Champion 3.webp",
+            "GrandChampionI" => "/Images/Ranks/Grand Champion 1.jpg",
+            "GrandChampionII" => "/Images/Ranks/Grand Champion 2.jpg",
+            "GrandChampionIII" => "/Images/Ranks/Grand Champion 3.jpg",
+            "SSL" => "/Images/Ranks/Super Sonic Legend.png",
+            _ => "/Images/Ranks/default.png"
+        };
+    }
 
-        <div class="team-details-banner"></div>
+    public string FormatRank(string rank)
+    {
+        return rank
+            .Replace("GrandChampion", "Grand Champion ")
+            .Replace("Champion", "Champion ")
+            .Replace("Diamond", "Diamond ")
+            .Replace("Platinum", "Platinum ")
+            .Replace("Gold", "Gold ")
+            .Replace("Silver", "Silver ")
+            .Replace("Bronze", "Bronze ");
+    }
+}
 
-        <div class="team-details-content">
-
-            <div class="team-details-logo">
-                @Model.Team!.Name.Substring(0, 1).ToUpper()
+@if (Model.Team == null)
+{
+    <div class="team-profile-page">
+        <div class="team-profile-card">
+            <div class="team-profile-content">
+                <h1>Team niet gevonden</h1>
+                <a asp-page="./TeamIndex" class="back-btn">Back to Teams</a>
             </div>
-
-            <h1>@Model.Team.Name</h1>
-
-            <div class="team-details-info">
-                <span>🌍 @Model.Team.Teamregion</span>
-                <span>⭐ @Model.Team.Teamrank</span>
-            </div>
-
-            <p class="team-details-bio">
-                Dit is het teamprofiel van @Model.Team.Name. Hier komen later de spelers, ranks, bio en team statistieken.
-            </p>
-
-            <a asp-page="./TeamIndex" class="back-btn">
-                Back to Teams
-            </a>
-
         </div>
     </div>
-</div>
+}
+else
+{
+    var logoBase64 = "";
+    var hasLogo = Model.Team.LogoData != null && Model.Team.LogoData.Length > 0;
+
+    if (hasLogo)
+    {
+        logoBase64 = Convert.ToBase64String(Model.Team.LogoData!);
+    }
+
+    <div class="team-profile-page">
+
+        <a asp-page="./TeamIndex" class="team-profile-back">← Back to Teams</a>
+
+        <div class="team-profile-card">
+
+            <div class="team-profile-banner"></div>
+
+            <div class="team-profile-content">
+
+                <div class="team-profile-logo">
+                    @if (hasLogo)
+                    {
+                        <img src="data:image/png;base64,@logoBase64" alt="Team Logo" />
+                    }
+                    else
+                    {
+                        @Model.Team.Name.Substring(0, 1).ToUpper()
+                    }
+                </div>
+
+                <h1>@Model.Team.Name</h1>
+
+                <div class="team-profile-meta">
+                    <span>🌍 @Model.Team.Teamregion</span>
+
+                    <span class="team-profile-rank">
+                        <img src="@GetRankImage(Model.Team.Teamrank.ToString())"
+                             alt="@Model.Team.Teamrank" />
+                        @FormatRank(Model.Team.Teamrank.ToString())
+                    </span>
+                </div>
+
+                <p class="team-created">Created at June 2026</p>
+
+                <div class="team-profile-actions">
+                    <button type="button">🤝 Connect</button>
+                    <button type="button">🚀 Avoid</button>
+                    <button type="button">⚔️ Play</button>
+                    <button type="button">💬 Chat</button>
+                </div>
+
+                <section class="team-profile-section">
+                    <h2>TEAM BIO</h2>
+                    <p>
+                        @(string.IsNullOrWhiteSpace(Model.Team.Description)
+                            ? "Team has no bio"
+                            : Model.Team.Description)
+                    </p>
+                </section>
+
+                <section class="team-profile-section">
+                    <h2>ROSTER</h2>
+
+                    <div class="roster-player">
+                        <div class="roster-avatar">P</div>
+                        <span>Player 1</span>
+                        <div class="roster-rank">Coming soon</div>
+                    </div>
+
+                    <div class="roster-player">
+                        <div class="roster-avatar">P</div>
+                        <span>Player 2</span>
+                        <div class="roster-rank">Coming soon</div>
+                    </div>
+
+                    <div class="roster-player">
+                        <div class="roster-avatar">P</div>
+                        <span>Player 3</span>
+                        <div class="roster-rank">Coming soon</div>
+                    </div>
+                </section>
+
+                <section class="team-profile-section notes-section">
+                    <h2>NOTES</h2>
+                    <p>Click here to add your note</p>
+                </section>
+
+            </div>
+        </div>
+    </div>
+}

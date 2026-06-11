@@ -50,7 +50,7 @@ body.scrim-body {
     font-weight: 700;
 }
 
-/* AUTH LOGIN / REGISTER */
+/* AUTH */
 .auth-container {
     min-height: 80vh;
     display: flex;
@@ -180,88 +180,111 @@ body.scrim-body {
         color: white !important;
     }
 
-.teams-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-    gap: 28px;
+/* TEAM LIST */
+.teams-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
 }
 
-.team-card {
-    background: #1e293b;
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 12px 30px rgba(0,0,0,.35);
-    border: 1px solid rgba(255,255,255,0.08);
-    transition: .3s;
+.team-row-card {
+    display: flex;
+    align-items: center;
+    background: #1b2230;
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 16px;
+    padding: 18px;
+    gap: 18px;
+    transition: .25s;
 }
 
-    .team-card:hover {
-        transform: translateY(-8px);
+    .team-row-card:hover {
+        transform: translateY(-3px);
+        border-color: #7c3aed;
     }
 
-.team-banner {
-    height: 120px;
-    background: linear-gradient(135deg, #2563eb, #7c3aed, #ec4899);
-}
-
-.team-content {
-    padding: 20px;
-    text-align: center;
-}
-
-.team-logo {
-    width: 80px;
-    height: 80px;
-    background: white;
-    border-radius: 50%;
-    border: 4px solid #1e293b;
+.team-rank-box {
+    width: 74px;
+    height: 54px;
+    border-radius: 10px;
+    background: #121826;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-weight: 900;
-    font-size: 34px;
-    color: #2563eb;
-    margin: -60px auto 15px auto;
     overflow: hidden;
+    flex-shrink: 0;
 }
 
-    .team-logo img {
+.team-rank-main-icon {
+    max-width: 46px;
+    max-height: 46px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+}
+
+.team-row-logo {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #0f172a;
+    border: 2px solid rgba(255,255,255,0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    font-weight: 900;
+    color: white;
+    flex-shrink: 0;
+}
+
+    .team-row-logo img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        border-radius: 50%;
     }
 
-.team-content h3 {
-    color: white;
-    font-size: 26px;
-    font-weight: 800;
-    margin-bottom: 15px;
+.team-row-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
 }
 
-.team-info {
+.team-row-name {
+    font-size: 24px;
+    font-weight: 900;
+    color: white;
+    word-break: break-word;
+}
+
+.team-row-meta {
     display: flex;
-    justify-content: center;
-    gap: 16px;
-    margin-bottom: 22px;
+    align-items: center;
+    gap: 14px;
     color: #cbd5e1;
+    font-size: 15px;
     flex-wrap: wrap;
 }
 
-.join-btn {
-    width: 100%;
+.team-row-btn {
     border: none;
-    background: linear-gradient(135deg,#22c55e,#16a34a);
-    color: white;
-    padding: 12px;
+    padding: 10px 18px;
     border-radius: 10px;
-    font-weight: bold;
+    background: linear-gradient(135deg,#2563eb,#7c3aed);
+    color: white !important;
+    font-weight: 800;
     cursor: pointer;
-    transition: .3s;
+    text-decoration: none !important;
+    flex-shrink: 0;
 }
 
-    .join-btn:hover {
-        transform: scale(1.03);
+    .team-row-btn:hover {
+        color: white !important;
+        transform: scale(1.04);
     }
 
 /* CREATE TEAM */
@@ -348,7 +371,8 @@ body.scrim-body {
 
 /* LIVE PREVIEW */
 .preview-wrapper h2,
-.live-preview h2 {
+.live-preview h2,
+.team-preview h2 {
     font-size: 30px;
     font-weight: 800;
     color: white;
@@ -409,6 +433,7 @@ body.scrim-body {
     margin-bottom: 16px;
 }
 
+.preview-meta,
 .preview-info {
     display: flex;
     justify-content: center;
@@ -417,7 +442,178 @@ body.scrim-body {
     flex-wrap: wrap;
 }
 
-/* TEAM DETAILS PAGE */
+/* TEAM DETAILS / PROFILE */
+.team-profile-page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 35px 25px 80px;
+}
+
+.team-profile-back {
+    display: inline-block;
+    color: #93c5fd !important;
+    text-decoration: none;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.team-profile-card {
+    background: #20252e;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 18px 45px rgba(0,0,0,0.35);
+}
+
+.team-profile-banner {
+    height: 155px;
+    background: linear-gradient(135deg, #0b0ba8, #1111c7);
+}
+
+.team-profile-content {
+    padding: 0 65px 45px;
+    position: relative;
+}
+
+.team-profile-logo {
+    width: 125px;
+    height: 125px;
+    border-radius: 50%;
+    background: #0f172a;
+    border: 3px solid white;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 46px;
+    font-weight: 900;
+    color: white;
+    margin-top: -65px;
+    margin-bottom: 28px;
+}
+
+    .team-profile-logo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+.team-profile-content h1 {
+    color: white;
+    font-size: 32px;
+    font-weight: 800;
+    margin-bottom: 16px;
+}
+
+.team-profile-meta {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    color: white;
+    font-weight: 700;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+}
+
+.team-profile-rank {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+    .team-profile-rank img {
+        width: 24px;
+        height: 24px;
+        object-fit: contain;
+    }
+
+.team-created {
+    color: white;
+    margin-bottom: 28px;
+}
+
+.team-profile-actions {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 22px;
+    margin-bottom: 34px;
+}
+
+    .team-profile-actions button {
+        background: transparent;
+        color: white;
+        border: 1px solid rgba(255,255,255,0.18);
+        border-radius: 999px;
+        padding: 10px 18px;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+        .team-profile-actions button:hover {
+            border-color: #a855f7;
+            box-shadow: 0 0 0 1px rgba(168,85,247,0.4);
+        }
+
+.team-profile-section {
+    margin-top: 30px;
+}
+
+    .team-profile-section h2 {
+        color: #9ca3af;
+        font-size: 18px;
+        font-weight: 900;
+        margin-bottom: 16px;
+    }
+
+    .team-profile-section p {
+        color: white;
+        font-weight: 600;
+    }
+
+.roster-player {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.roster-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: #111827;
+    border: 1px solid rgba(255,255,255,0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    flex-shrink: 0;
+}
+
+.roster-player span {
+    min-width: 140px;
+    color: white;
+    font-weight: 700;
+}
+
+.roster-rank {
+    min-width: 120px;
+    padding: 7px 14px;
+    border-radius: 999px;
+    color: #9ca3af;
+    border: 1px solid rgba(255,255,255,0.12);
+    text-align: center;
+}
+
+.notes-section {
+    border-top: 1px solid rgba(255,255,255,0.15);
+    padding-top: 24px;
+}
+
+    .notes-section p {
+        color: #7b8190;
+    }
+
+/* OLD TEAM DETAILS FALLBACK */
 .team-details-page {
     max-width: 900px;
     margin: 0 auto;
@@ -507,116 +703,42 @@ body.scrim-body {
         display: block;
     }
 
-    .teams-grid {
-        grid-template-columns: 1fr;
+    .btn-create {
+        margin-top: 18px;
     }
 
     .create-team-page {
         grid-template-columns: 1fr;
         padding: 25px 15px;
     }
-}
-/* TEAM CARD LINKS FIX */
-.team-card a,
-.team-content a,
-.team-content h3 a {
-    color: white !important;
-    text-decoration: none !important;
-}
 
-    .team-card a:hover,
-    .team-content a:hover,
-    .team-content h3 a:hover {
-        color: white !important;
-        text-decoration: none !important;
+    .team-row-card {
+        flex-wrap: wrap;
     }
 
-    .team-card a:visited,
-    .team-content a:visited,
-    .team-content h3 a:visited {
-        color: white !important;
-        text-decoration: none !important;
+    .team-row-info {
+        min-width: 180px;
     }
 
-/* HELE CARD KLIKBAR */
-.team-card-link {
-    text-decoration: none !important;
-    color: inherit !important;
-    display: block;
+    .team-row-btn {
+        width: 100%;
+        text-align: center;
+    }
+
+    .team-profile-content {
+        padding: 0 24px 35px;
+    }
+
+    .team-profile-actions {
+        grid-template-columns: 1fr 1fr;
+    }
 }
 
-    .team-card-link:hover {
-        text-decoration: none !important;
-        color: inherit !important;
-    }
-
-/* BLAUWE FOCUS RAND WEG */
-.team-card:focus,
-.team-card a:focus,
-.join-btn:focus {
+/* FOCUS FIX */
+.team-row-card:focus,
+.team-row-btn:focus,
+.btn-create:focus,
+.btn-create-team:focus {
     outline: none !important;
     box-shadow: none !important;
-}
-/* TEAM POPUP MODAL */
-.team-card {
-    cursor: pointer;
-}
-
-.team-modal {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.75);
-    z-index: 9999;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-}
-
-    .team-modal.show {
-        display: flex;
-    }
-
-.team-modal-card {
-    width: 100%;
-    max-width: 650px;
-    background: #1e293b;
-    border-radius: 24px;
-    overflow: hidden;
-    position: relative;
-    box-shadow: 0 25px 70px rgba(0,0,0,0.55);
-    border: 1px solid rgba(255,255,255,0.1);
-}
-
-.team-modal-close {
-    position: absolute;
-    top: 14px;
-    right: 18px;
-    background: rgba(0,0,0,0.35);
-    color: white;
-    border: none;
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    font-size: 28px;
-    line-height: 34px;
-    cursor: pointer;
-    z-index: 10;
-}
-
-    .team-modal-close:hover {
-        background: rgba(0,0,0,0.55);
-    }
-
-.team-details-logo img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 50%;
-}
-
-/* blauwe onderstreping weg */
-.team-card,
-.team-card * {
-    text-decoration: none !important;
 }

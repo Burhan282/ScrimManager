@@ -12,7 +12,7 @@ namespace ScrimManagerApplication.Application
             _userRepository = userRepository;
         }
 
-        // REGISTRATIE
+        
         public void Register(
             string username,
             string email,
@@ -32,12 +32,12 @@ namespace ScrimManagerApplication.Application
             _userRepository.Add(user);
         }
 
-        // LOGIN → BELANGRIJK: geeft volledige User terug (incl. Id)
+        
         public User? Login(string email, string password)
         {
             var user = _userRepository.GetByEmailAndPassword(email, password);
 
-            // DEBUG (optioneel)
+            
             if (user != null)
             {
                 System.Diagnostics.Debug.WriteLine($"LOGIN OK - USER ID: {user.Id}");

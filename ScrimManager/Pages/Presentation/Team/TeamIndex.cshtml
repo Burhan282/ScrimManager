@@ -1,6 +1,50 @@
 ﻿@page
 @model ScrimManagerPresentation.Pages.Presentation.Team.TeamIndexModel
 
+@functions {
+    public string GetRankImage(string rank)
+    {
+        return rank switch
+        {
+            "BronzeI" => "/Images/Ranks/Bronze 1.webp",
+            "BronzeII" => "/Images/Ranks/Bronze 2.jpg",
+            "BronzeIII" => "/Images/Ranks/Bronze 3.webp",
+            "SilverI" => "/Images/Ranks/Silver 1.png",
+            "SilverII" => "/Images/Ranks/Silver 2.png",
+            "SilverIII" => "/Images/Ranks/Silver 3.jpg",
+            "GoldI" => "/Images/Ranks/Gold 1.webp",
+            "GoldII" => "/Images/Ranks/Gold 2.jpg",
+            "GoldIII" => "/Images/Ranks/Gold 3.png",
+            "PlatinumI" => "/Images/Ranks/Plat 1.png",
+            "PlatinumII" => "/Images/Ranks/Plat 2.png",
+            "PlatinumIII" => "/Images/Ranks/PLat 3.webp",
+            "DiamondI" => "/Images/Ranks/Diamond 1.png",
+            "DiamondII" => "/Images/Ranks/Diamond 2.png",
+            "DiamondIII" => "/Images/Ranks/Diamond 3.png",
+            "ChampionI" => "/Images/Ranks/Champion 1.webp",
+            "ChampionII" => "/Images/Ranks/Champion 2.webp",
+            "ChampionIII" => "/Images/Ranks/Champion 3.webp",
+            "GrandChampionI" => "/Images/Ranks/Grand Champion 1.jpg",
+            "GrandChampionII" => "/Images/Ranks/Grand Champion 2.jpg",
+            "GrandChampionIII" => "/Images/Ranks/Grand Champion 3.jpg",
+            "SSL" => "/Images/Ranks/Super Sonic Legend.png",
+            _ => "/Images/Ranks/default.png"
+        };
+    }
+
+    public string FormatRank(string rank)
+    {
+        return rank
+            .Replace("GrandChampion", "Grand Champion ")
+            .Replace("Champion", "Champion ")
+            .Replace("Diamond", "Diamond ")
+            .Replace("Platinum", "Platinum ")
+            .Replace("Gold", "Gold ")
+            .Replace("Silver", "Silver ")
+            .Replace("Bronze", "Bronze ");
+    }
+}
+
 <div class="teams-page">
     <div class="teams-header">
         <div class="teams-title">
@@ -8,12 +52,10 @@
             <p>Bekijk alle teams en open hun profiel.</p>
         </div>
 
-        <a asp-page="./CreateTeam" class="btn-create">
-            + Create Team
-        </a>
+        <a asp-page="./CreateTeam" class="btn-create">+ Create Team</a>
     </div>
 
-    <div class="teams-grid">
+    <div class="teams-list">
         @foreach (var team in Model.Teams)
         {
             var logoBase64 = "";
@@ -24,86 +66,41 @@
                 logoBase64 = Convert.ToBase64String(team.LogoData!);
             }
 
-            <div class="team-card"
-                 onclick="openTeamModal('@team.Name', '@team.Teamregion', '@team.Teamrank', '@logoBase64')">
+            <div class="team-row-card">
 
-                <div class="team-banner"></div>
-
-                <div class="team-content">
-                    <div class="team-logo">
-                        @if (hasLogo)
-                        {
-                            <img src="data:image/png;base64,@logoBase64" alt="Team logo" />
-                        }
-                        else
-                        {
-                            @team.Name.Substring(0, 1).ToUpper()
-                        }
-                    </div>
-
-                    <h3>@team.Name</h3>
-
-                    <div class="team-info">
-                        <span>🌍 @team.Teamregion</span>
-                        <span>⭐ @team.Teamrank</span>
-                    </div>
-
-                    <button type="button" class="join-btn">
-                        Apply Team
-                    </button>
+                <div class="team-rank-box">
+                    <img src="@GetRankImage(team.Teamrank.ToString())"
+                         class="team-rank-main-icon"
+                         alt="@team.Teamrank" />
                 </div>
+
+                <div class="team-row-logo">
+                    @if (hasLogo)
+                    {
+                        <img src="data:image/png;base64,@logoBase64" alt="Team Logo" />
+                    }
+                    else
+                    {
+                        @team.Name.Substring(0, 1).ToUpper()
+                    }
+                </div>
+
+                <div class="team-row-info">
+                    <div class="team-row-name">@team.Name</div>
+
+                    <div class="team-row-meta">
+                        <span>🌍 @team.Teamregion</span>
+                        <span>@FormatRank(team.Teamrank.ToString())</span>
+                    </div>
+                </div>
+
+                <a asp-page="./TeamDetails"
+                   asp-route-id="@team.Id"
+                   class="team-row-btn">
+                    View
+                </a>
+
             </div>
         }
     </div>
 </div>
-
-<div id="teamModal" class="team-modal">
-    <div class="team-modal-card">
-        <button type="button" class="team-modal-close" onclick="closeTeamModal()">×</button>
-
-        <div class="team-details-banner"></div>
-
-        <div class="team-details-content">
-            <div id="modalLogo" class="team-details-logo"></div>
-
-            <h1 id="modalName"></h1>
-
-            <div class="team-details-info">
-                <span id="modalRegion"></span>
-                <span id="modalRank"></span>
-            </div>
-
-            <p class="team-details-bio">
-                Dit is het teamprofiel. Hier komen later de spelers, bio en team statistieken.
-            </p>
-        </div>
-    </div>
-</div>
-
-<script>
-    function openTeamModal(name, region, rank, logoBase64) {
-        document.getElementById("modalName").innerText = name;
-        document.getElementById("modalRegion").innerText = "🌍 " + region;
-        document.getElementById("modalRank").innerText = "⭐ " + rank;
-
-        const modalLogo = document.getElementById("modalLogo");
-
-        if (logoBase64 && logoBase64.length > 0) {
-            modalLogo.innerHTML = `<img src="data:image/png;base64,${logoBase64}" alt="Team logo" />`;
-        } else {
-            modalLogo.innerText = name.substring(0, 1).toUpperCase();
-        }
-
-        document.getElementById("teamModal").classList.add("show");
-    }
-
-    function closeTeamModal() {
-        document.getElementById("teamModal").classList.remove("show");
-    }
-
-    document.getElementById("teamModal").addEventListener("click", function (event) {
-        if (event.target === this) {
-            closeTeamModal();
-        }
-    });
-</script>
