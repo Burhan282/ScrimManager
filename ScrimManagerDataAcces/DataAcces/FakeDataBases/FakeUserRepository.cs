@@ -1,5 +1,7 @@
 ﻿using ScrimManagerApplication.Application.Interfaces;
 using ScrimManagerApplication.Application.Models;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ScrimManagerDataAcces.DataAcces.FakeDataBases
 {
@@ -17,6 +19,11 @@ namespace ScrimManagerDataAcces.DataAcces.FakeDataBases
             return users.FirstOrDefault(u =>
                 u.Email == email &&
                 u.PasswordHash == password);
+        }
+
+        public User? GetById(int id)
+        {
+            return users.FirstOrDefault(u => u.Id == id);
         }
 
         public List<User> GetAll()

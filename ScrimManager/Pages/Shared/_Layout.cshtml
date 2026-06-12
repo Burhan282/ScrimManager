@@ -1,7 +1,21 @@
 ﻿@using Microsoft.AspNetCore.Http
+@using ScrimManagerApplication.Application
+@inject TeamService TeamService
 
 @{
     string? username = Context.Session.GetString("Username");
+    string? userLogoBase64 = Context.Session.GetString("UserLogoBase64");
+    int? userId = Context.Session.GetInt32("UserId");
+
+    int notificationCount = 0;
+
+    if (userId != null)
+    {
+        notificationCount = TeamService.GetPendingRequestsForCaptain(userId.Value).Count;
+    }
+
+    string? toastMessage = TempData["ToastMessage"]?.ToString();
+    string? toastType = TempData["ToastType"]?.ToString();
 }
 
 <!DOCTYPE html>
@@ -17,6 +31,15 @@
 </head>
 
 <body class="scrim-body">
+
+    @if (!string.IsNullOrEmpty(toastMessage))
+    {
+        <div class="scrim-toast toast-@toastType" id="scrimToast">
+            <div class="scrim-toast-message">@toastMessage</div>
+            <div class="scrim-toast-timer"></div>
+        </div>
+    }
+
     <header>
         <nav class="navbar navbar-expand-lg scrim-navbar">
             <div class="container">
@@ -27,7 +50,10 @@
                 <button class="navbar-toggler bg-light"
                         type="button"
                         data-bs-toggle="collapse"
-                        data-bs-target="#navbarMenu">
+                        data-bs-target="#navbarMenu"
+                        aria-controls="navbarMenu"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
@@ -46,6 +72,10 @@
                             <li class="nav-item">
                                 <a class="nav-link scrim-link" asp-page="/Presentation/Team/TeamIndex">Teams</a>
                             </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link scrim-link" asp-page="/Presentation/Team/MyTeam">My Teams</a>
+                            </li>
                         }
 
                         <li class="nav-item">
@@ -53,19 +83,53 @@
                         </li>
                     </ul>
 
-                    <div class="d-flex gap-2 align-items-center">
+                    <div class="d-flex gap-3 align-items-center">
                         @if (!string.IsNullOrEmpty(username))
                         {
+                            <div class="notification-wrapper">
+                                <a class="notification-btn"
+                                   asp-page="/Presentation/Team/TeamRequest"
+                                   title="Notifications">
+                                    🔔
+
+                                    @if (notificationCount > 0)
+                                    {
+                                        <span class="notification-badge">@notificationCount</span>
+                                    }
+                                </a>
+                            </div>
+
                             <div class="dropdown">
-                                <a class="nav-link scrim-link fw-bold dropdown-toggle"
+                                <a class="nav-user dropdown-toggle"
                                    href="#"
                                    role="button"
                                    data-bs-toggle="dropdown"
                                    aria-expanded="false">
-                                    @username
+
+                                    @if (!string.IsNullOrEmpty(userLogoBase64))
+                                    {
+                                        <img src="data:image/png;base64,@userLogoBase64"
+                                             class="nav-avatar"
+                                             alt="Profile" />
+                                    }
+                                    else
+                                    {
+                                        <div class="nav-avatar-placeholder">
+                                            @username.Substring(0, 1).ToUpper()
+                                        </div>
+                                    }
+
+                                    <span>@username</span>
                                 </a>
 
                                 <ul class="dropdown-menu dropdown-menu-end scrim-dropdown">
+                                    <li>
+                                        <a class="dropdown-item" asp-page="/Presentation/Account/Profile">My Account</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-page="/Presentation/Team/MyTeam">My Teams</a>
+                                    </li>
+                                    <li><hr class="dropdown-divider" /></li>
                                     <li>
                                         <a class="dropdown-item" asp-page="/Presentation/Account/Logout">Logout</a>
                                     </li>
@@ -96,6 +160,16 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        const toast = document.getElementById("scrimToast");
+
+        if (toast) {
+        setTimeout(() => {
+        toast.style.display = "none";
+        }, 4000);
+        }
+    </script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

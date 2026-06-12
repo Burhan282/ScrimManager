@@ -5,50 +5,10 @@
     ViewData["Title"] = "Create Team";
 }
 
-@functions {
-    private string GetRankImage(string rank)
-    {
-        return rank switch
-        {
-            "BronzeI" => "/Images/Ranks/Bronze 1.webp",
-            "BronzeII" => "/Images/Ranks/Bronze 2.jpg",
-            "BronzeIII" => "/Images/Ranks/Bronze 3.webp",
-
-            "SilverI" => "/Images/Ranks/Silver 1.png",
-            "SilverII" => "/Images/Ranks/Silver 2.png",
-            "SilverIII" => "/Images/Ranks/Silver 3.jpg",
-
-            "GoldI" => "/Images/Ranks/Gold 1.webp",
-            "GoldII" => "/Images/Ranks/Gold 2.jpg",
-            "GoldIII" => "/Images/Ranks/Gold 3.png",
-
-            "PlatinumI" => "/Images/Ranks/Plat 1.png",
-            "PlatinumII" => "/Images/Ranks/Plat 2.png",
-            "PlatinumIII" => "/Images/Ranks/PLat 3.webp",
-
-            "DiamondI" => "/Images/Ranks/Diamond 1.png",
-            "DiamondII" => "/Images/Ranks/Diamond 2.jpg",
-            "DiamondIII" => "/Images/Ranks/Diamond 3.png",
-
-            "ChampionI" => "/Images/Ranks/Champion 1.webp",
-            "ChampionII" => "/Images/Ranks/Champion 2.webp",
-            "ChampionIII" => "/Images/Ranks/Champion 3.webp",
-
-            "GrandChampionI" => "/Images/Ranks/Grand Champion 1.jpg",
-            "GrandChampionII" => "/Images/Ranks/Grand Champion 2.jpg",
-            "GrandChampionIII" => "/Images/Ranks/Grand Champion 3.jpg",
-
-            "SSL" => "/Images/Ranks/Super Sonic Legend.png",
-
-            _ => ""
-        };
-    }
-}
-
 <div class="create-team-page">
     <div class="create-team-form">
         <h1>Create Team</h1>
-        <p class="subtitle">Maak je eigen esports team en voeg logo en bio toe.</p>
+        <p class="subtitle">Maak je eigen esports team. De team rank wordt automatisch berekend op basis van de speler ranks.</p>
 
         <form method="post" enctype="multipart/form-data">
 
@@ -72,50 +32,21 @@
             </div>
 
             <div class="form-group">
-                <label asp-for="CreateTeamDTO.Teamrank">Rank</label>
-                <select asp-for="CreateTeamDTO.Teamrank" id="rankInput" class="form-control">
-                    <option value="">Select Rank</option>
-
-                    <option value="BronzeI">Bronze I</option>
-                    <option value="BronzeII">Bronze II</option>
-                    <option value="BronzeIII">Bronze III</option>
-
-                    <option value="SilverI">Silver I</option>
-                    <option value="SilverII">Silver II</option>
-                    <option value="SilverIII">Silver III</option>
-
-                    <option value="GoldI">Gold I</option>
-                    <option value="GoldII">Gold II</option>
-                    <option value="GoldIII">Gold III</option>
-
-                    <option value="PlatinumI">Platinum I</option>
-                    <option value="PlatinumII">Platinum II</option>
-                    <option value="PlatinumIII">Platinum III</option>
-
-                    <option value="DiamondI">Diamond I</option>
-                    <option value="DiamondII">Diamond II</option>
-                    <option value="DiamondIII">Diamond III</option>
-
-                    <option value="ChampionI">Champion I</option>
-                    <option value="ChampionII">Champion II</option>
-                    <option value="ChampionIII">Champion III</option>
-
-                    <option value="GrandChampionI">Grand Champion I</option>
-                    <option value="GrandChampionII">Grand Champion II</option>
-                    <option value="GrandChampionIII">Grand Champion III</option>
-
-                    <option value="SSL">Supersonic Legend</option>
-                </select>
-            </div>
-
-            <div class="form-group">
                 <label asp-for="CreateTeamDTO.Description">Team Bio</label>
-                <textarea asp-for="CreateTeamDTO.Description" id="bioInput" class="form-control" rows="4" placeholder="Korte omschrijving van je team"></textarea>
+                <textarea asp-for="CreateTeamDTO.Description"
+                          id="bioInput"
+                          class="form-control"
+                          rows="4"
+                          placeholder="Korte omschrijving van je team"></textarea>
             </div>
 
             <div class="form-group">
                 <label>Team Logo</label>
-                <input type="file" asp-for="LogoFile" id="logoInput" class="form-control" accept="image/*" />
+                <input type="file"
+                       asp-for="LogoFile"
+                       id="logoInput"
+                       class="form-control"
+                       accept="image/*" />
             </div>
 
             <button type="submit" class="btn-create-team">Create Team</button>
@@ -124,6 +55,7 @@
 
     <div class="team-preview">
         <h2>Live Preview</h2>
+
         <div class="preview-card">
             <div class="preview-banner"></div>
 
@@ -135,27 +67,16 @@
 
                 <div class="preview-meta">
                     <span id="previewRegion">🌍 Region</span>
-                    <span id="previewRank">⭐ Rank</span>
+                    <span id="previewRank">🏆 Rank wordt automatisch berekend</span>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<style>
-    .rank-icon {
-        width: 22px;
-        height: 22px;
-        object-fit: contain;
-        vertical-align: middle;
-        margin-right: 6px;
-    }
-</style>
-
 <script>
     const teamNameInput = document.getElementById("teamNameInput");
     const regionInput = document.getElementById("regionInput");
-    const rankInput = document.getElementById("rankInput");
     const bioInput = document.getElementById("bioInput");
     const logoInput = document.getElementById("logoInput");
 
@@ -163,42 +84,10 @@
     const previewName = document.getElementById("previewName");
     const previewBio = document.getElementById("previewBio");
     const previewRegion = document.getElementById("previewRegion");
-    const previewRank = document.getElementById("previewRank");
-
-    const rankImages = {
-        BronzeI: "/Images/Ranks/Bronze 1.webp",
-        BronzeII: "/Images/Ranks/Bronze 2.jpg",
-        BronzeIII: "/Images/Ranks/Bronze 3.webp",
-
-        SilverI: "/Images/Ranks/Silver 1.png",
-        SilverII: "/Images/Ranks/Silver 2.png",
-        SilverIII: "/Images/Ranks/Silver 3.jpg",
-
-        GoldI: "/Images/Ranks/Gold 1.webp",
-        GoldII: "/Images/Ranks/Gold 2.jpg",
-        GoldIII: "/Images/Ranks/Gold 3.png",
-
-        PlatinumI: "/Images/Ranks/Plat 1.png",
-        PlatinumII: "/Images/Ranks/Plat 2.png",
-        PlatinumIII: "/Images/Ranks/PLat 3.webp",
-
-        DiamondI: "/Images/Ranks/Diamond 1.png",
-        DiamondII: "/Images/Ranks/Diamond 2.png",
-        DiamondIII: "/Images/Ranks/Diamond 3.png",
-
-        ChampionI: "/Images/Ranks/Champion 1.webp",
-        ChampionII: "/Images/Ranks/Champion 2.webp",
-        ChampionIII: "/Images/Ranks/Champion 3.webp",
-
-        GrandChampionI: "/Images/Ranks/Grand Champion 1.jpg",
-        GrandChampionII: "/Images/Ranks/Grand Champion 2.jpg",
-        GrandChampionIII: "/Images/Ranks/Grand Champion 3.jpg",
-
-        SSL: "/Images/Ranks/Super Sonic Legend.png"
-    };
 
     teamNameInput.addEventListener("input", () => {
         const name = teamNameInput.value.trim();
+
         previewName.textContent = name || "Your Team Name";
 
         if (!logoInput.files.length) {
@@ -208,18 +97,6 @@
 
     regionInput.addEventListener("change", () => {
         previewRegion.textContent = regionInput.value ? "🌍 " + regionInput.value : "🌍 Region";
-    });
-
-    rankInput.addEventListener("change", () => {
-        const rankValue = rankInput.value;
-        const rankText = rankInput.options[rankInput.selectedIndex].text;
-        const rankImage = rankImages[rankValue];
-
-        if (rankValue && rankImage) {
-            previewRank.innerHTML = `<img src="${rankImage}" class="rank-icon" alt="${rankText}" /> ${rankText}`;
-        } else {
-            previewRank.textContent = "⭐ Rank";
-        }
     });
 
     bioInput.addEventListener("input", () => {

@@ -1,7 +1,7 @@
 html {
     font-size: 14px;
-    position: relative;
     min-height: 100%;
+    position: relative;
 }
 
 @media (min-width: 768px) {
@@ -29,12 +29,14 @@ body.scrim-body {
     color: white !important;
     font-size: 28px;
     font-weight: 900;
+    text-decoration: none !important;
 }
 
 .scrim-link {
     color: rgba(255,255,255,0.85) !important;
     margin: 0 12px;
     font-weight: 600;
+    text-decoration: none !important;
 }
 
     .scrim-link:hover {
@@ -50,13 +52,186 @@ body.scrim-body {
     font-weight: 700;
 }
 
-/* AUTH */
+/* USER DROPDOWN */
+.nav-user,
+.nav-user * {
+    text-decoration: none !important;
+}
+
+.nav-user {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: white !important;
+    font-weight: 800;
+    padding: 6px 10px;
+    border-radius: 999px;
+}
+
+    .nav-user:hover {
+        background: rgba(255,255,255,0.08);
+        color: white !important;
+    }
+
+.nav-avatar,
+.nav-avatar-placeholder {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255,255,255,0.25);
+    background: #0f172a;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 900;
+}
+
+.scrim-dropdown {
+    background: #111827;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 12px;
+    padding: 8px;
+}
+
+    .scrim-dropdown .dropdown-item {
+        color: white;
+        border-radius: 8px;
+        font-weight: 600;
+    }
+
+        .scrim-dropdown .dropdown-item:hover {
+            background: #1e293b;
+            color: white;
+        }
+
+    .scrim-dropdown .dropdown-divider {
+        border-color: rgba(255,255,255,0.12);
+    }
+
+/* NOTIFICATIONS */
+.notification-wrapper {
+    position: relative;
+}
+
+.notification-btn {
+    position: relative;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    text-decoration: none !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.12);
+    font-size: 20px;
+    transition: .2s;
+}
+
+    .notification-btn:hover {
+        transform: translateY(-2px);
+        background: rgba(255,255,255,0.1);
+    }
+
+.notification-badge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: #ef4444;
+    color: white;
+    font-size: 12px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* TOAST */
+.scrim-toast {
+    position: fixed;
+    top: 90px;
+    right: 28px;
+    width: 340px;
+    background: #050816;
+    color: white;
+    border-radius: 14px;
+    overflow: hidden;
+    z-index: 9999;
+    box-shadow: 0 18px 45px rgba(0,0,0,0.45);
+    border: 1px solid rgba(255,255,255,0.12);
+    animation: toastSlideIn .25s ease-out;
+}
+
+.scrim-toast-message {
+    padding: 16px 18px;
+    font-weight: 800;
+}
+
+.scrim-toast-timer {
+    height: 4px;
+    width: 100%;
+    animation: toastTimer 4s linear forwards;
+}
+
+.toast-success .scrim-toast-timer {
+    background: #22c55e;
+}
+
+.toast-failed .scrim-toast-timer,
+.toast-error .scrim-toast-timer {
+    background: #ef4444;
+}
+
+.toast-pending .scrim-toast-timer,
+.toast-warning .scrim-toast-timer {
+    background: #f59e0b;
+}
+
+@keyframes toastTimer {
+    from {
+        width: 100%;
+    }
+
+    to {
+        width: 0%;
+    }
+}
+
+@keyframes toastSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(25px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* AUTH LOGIN / REGISTER */
 .auth-container {
     min-height: 80vh;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 40px 15px;
+}
+
+.auth-register-page {
+    max-width: 1250px;
+    margin: 0 auto;
+    padding: 40px 25px 80px;
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+    gap: 40px;
+    align-items: start;
 }
 
 .auth-card {
@@ -69,12 +244,16 @@ body.scrim-body {
     box-shadow: 0 20px 50px rgba(0,0,0,0.35);
 }
 
-    .auth-card h1 {
-        font-size: 40px;
-        font-weight: 800;
-        margin-bottom: 10px;
-        color: white;
-    }
+.auth-register-page .auth-card {
+    max-width: none;
+}
+
+.auth-card h1 {
+    font-size: 40px;
+    font-weight: 800;
+    margin-bottom: 10px;
+    color: white;
+}
 
 .auth-subtitle {
     color: rgba(255,255,255,0.7);
@@ -85,6 +264,7 @@ body.scrim-body {
     color: white;
     font-weight: 600;
     margin-bottom: 6px;
+    display: block;
 }
 
 .auth-input {
@@ -136,31 +316,135 @@ body.scrim-body {
     color: white;
 }
 
-/* TEAMS INDEX */
-.teams-page {
+/* REGISTER / PREVIEW */
+.register-preview,
+.live-preview,
+.team-preview {
+    width: 100%;
+}
+
+    .register-preview h2,
+    .live-preview h2,
+    .team-preview h2 {
+        font-size: 34px;
+        font-weight: 900;
+        color: white;
+        margin-bottom: 14px;
+    }
+
+.preview-card,
+.register-preview-card {
+    background: #1e293b;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 12px 30px rgba(0,0,0,.30);
+    text-align: center;
+}
+
+.preview-banner,
+.register-preview-banner {
+    height: 120px;
+    background: linear-gradient(135deg,#2563eb,#7c3aed,#ec4899);
+}
+
+.preview-content,
+.register-preview-content {
+    padding: 20px;
+    text-align: center;
+}
+
+.preview-logo,
+.register-preview-logo {
+    width: 80px;
+    height: 80px;
+    background: white;
+    color: #2563eb;
+    border-radius: 50%;
+    border: 4px solid #1e293b;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 34px;
+    font-weight: 900;
+    margin: -60px auto 15px auto;
+    overflow: hidden;
+    position: relative;
+    z-index: 5;
+}
+
+    .preview-logo img,
+    .register-preview-logo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+
+.preview-content h3,
+.register-preview-content h3 {
+    color: white;
+    font-size: 26px;
+    font-weight: 900;
+    margin-bottom: 10px;
+}
+
+.preview-content p,
+.register-preview-content p {
+    color: #cbd5e1;
+    margin-bottom: 16px;
+}
+
+.preview-meta,
+.preview-info,
+.register-preview-meta {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    color: #cbd5e1;
+    flex-wrap: wrap;
+}
+
+.register-preview-rank {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+    .register-preview-rank img {
+        width: 22px;
+        height: 22px;
+        object-fit: contain;
+    }
+
+/* TEAMS / MY TEAMS */
+.teams-page,
+.my-teams-page {
     max-width: 1200px;
     margin: 0 auto;
     padding: 35px 25px 80px;
 }
 
-.teams-header {
+.teams-header,
+.my-teams-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 35px;
 }
 
-.teams-title h1 {
-    font-size: 42px;
-    font-weight: 800;
-    margin-bottom: 6px;
-    color: white;
-}
+    .teams-title h1,
+    .my-teams-header h1 {
+        font-size: 42px;
+        font-weight: 900;
+        color: white;
+        margin-bottom: 6px;
+    }
 
-.teams-title p {
-    color: #94a3b8;
-    margin: 0;
-}
+    .teams-title p,
+    .my-teams-header p {
+        color: #94a3b8;
+        margin: 0;
+    }
 
 .btn-create,
 .create-team-link {
@@ -169,9 +453,9 @@ body.scrim-body {
     color: white !important;
     padding: 12px 24px;
     border-radius: 12px;
-    text-decoration: none;
+    text-decoration: none !important;
     font-weight: bold;
-    transition: .3s;
+    transition: .25s;
 }
 
     .btn-create:hover,
@@ -180,7 +464,6 @@ body.scrim-body {
         color: white !important;
     }
 
-/* TEAM LIST */
 .teams-list {
     display: flex;
     flex-direction: column;
@@ -221,7 +504,6 @@ body.scrim-body {
     width: auto;
     height: auto;
     object-fit: contain;
-    display: block;
 }
 
 .team-row-logo {
@@ -251,6 +533,7 @@ body.scrim-body {
     display: flex;
     flex-direction: column;
     gap: 6px;
+    text-align: left;
     min-width: 0;
 }
 
@@ -263,6 +546,7 @@ body.scrim-body {
 
 .team-row-meta {
     display: flex;
+    justify-content: flex-start;
     align-items: center;
     gap: 14px;
     color: #cbd5e1;
@@ -271,20 +555,135 @@ body.scrim-body {
 }
 
 .team-row-btn {
-    border: none;
+    width: auto;
     padding: 10px 18px;
     border-radius: 10px;
     background: linear-gradient(135deg,#2563eb,#7c3aed);
     color: white !important;
     font-weight: 800;
-    cursor: pointer;
     text-decoration: none !important;
     flex-shrink: 0;
+    border: none;
 }
 
     .team-row-btn:hover {
-        color: white !important;
         transform: scale(1.04);
+        color: white !important;
+    }
+
+/* MY TEAM CARDS */
+.my-teams-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+}
+
+.my-team-card {
+    display: block;
+    background: #1e293b;
+    border-radius: 22px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 14px 35px rgba(0,0,0,0.35);
+    padding: 0;
+    transition: .25s;
+}
+
+    .my-team-card:hover {
+        transform: translateY(-5px);
+        border-color: #7c3aed;
+    }
+
+.my-team-banner {
+    height: 105px;
+    background: linear-gradient(135deg,#2563eb,#7c3aed,#ec4899);
+}
+
+.my-team-content {
+    padding: 0 22px 24px;
+    text-align: center;
+    display: block;
+}
+
+.my-team-logo {
+    width: 85px;
+    height: 85px;
+    border-radius: 50%;
+    background: #0f172a;
+    border: 4px solid #1e293b;
+    color: white;
+    margin: -42px auto 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 34px;
+    font-weight: 900;
+    overflow: hidden;
+}
+
+    .my-team-logo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+.my-team-content h2 {
+    color: white;
+    font-size: 25px;
+    font-weight: 900;
+    margin-bottom: 12px;
+}
+
+.my-team-meta {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    color: #cbd5e1;
+    font-size: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+
+.my-team-description {
+    color: #94a3b8;
+    min-height: 44px;
+    margin-bottom: 20px;
+}
+
+.my-team-btn {
+    display: inline-block;
+    width: 100%;
+    background: linear-gradient(135deg,#2563eb,#7c3aed);
+    color: white !important;
+    padding: 11px 18px;
+    border-radius: 12px;
+    font-weight: 800;
+    text-decoration: none !important;
+}
+
+    .my-team-btn:hover {
+        color: white !important;
+        transform: translateY(-2px);
+    }
+
+.my-teams-empty {
+    background: #1e293b;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 22px;
+    padding: 45px;
+    text-align: center;
+    box-shadow: 0 14px 35px rgba(0,0,0,0.35);
+}
+
+    .my-teams-empty h2 {
+        color: white;
+        font-size: 32px;
+        font-weight: 900;
+    }
+
+    .my-teams-empty p {
+        color: #94a3b8;
+        margin-bottom: 24px;
     }
 
 /* CREATE TEAM */
@@ -341,6 +740,11 @@ body.scrim-body {
     color: white;
 }
 
+.create-team-form textarea {
+    min-height: 110px;
+    resize: vertical;
+}
+
     .create-team-form input:focus,
     .create-team-form select:focus,
     .create-team-form textarea:focus {
@@ -348,11 +752,6 @@ body.scrim-body {
         border-color: #4da3ff;
         box-shadow: 0 0 0 3px rgba(77,163,255,0.2);
     }
-
-.create-team-form textarea {
-    min-height: 110px;
-    resize: vertical;
-}
 
 .btn-create-team {
     width: 100%;
@@ -366,163 +765,104 @@ body.scrim-body {
 }
 
     .btn-create-team:hover {
-        opacity: 0.9;
+        transform: scale(1.02);
     }
 
-/* LIVE PREVIEW */
-.preview-wrapper h2,
-.live-preview h2,
-.team-preview h2 {
-    font-size: 30px;
-    font-weight: 800;
-    color: white;
-    margin-bottom: 14px;
+/* TEAM DETAILS */
+.team-profile-page,
+.team-details-page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 35px 25px 80px;
 }
 
-.preview-card {
+.team-profile-back,
+.back-btn {
+    display: inline-block;
+    color: #93c5fd !important;
+    text-decoration: none !important;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.team-profile-card,
+.team-details-card {
     background: #1e293b;
-    border-radius: 20px;
+    border-radius: 24px;
     overflow: hidden;
-    box-shadow: 0 12px 30px rgba(0,0,0,.30);
+    box-shadow: 0 15px 40px rgba(0,0,0,.35);
+    border: 1px solid rgba(255,255,255,0.08);
 }
 
-.preview-banner {
-    height: 120px;
-    background: linear-gradient(135deg,#2563eb,#7c3aed,#ec4899);
+.team-profile-banner,
+.team-details-banner {
+    height: 150px;
+    background: linear-gradient(135deg, #2563eb, #7c3aed, #ec4899);
 }
 
-.preview-content {
-    padding: 20px;
+.team-profile-content,
+.team-details-content {
     text-align: center;
+    padding: 30px;
 }
 
-.preview-logo {
-    width: 80px;
-    height: 80px;
+.team-profile-logo,
+.team-details-logo {
+    width: 125px;
+    height: 125px;
+    min-width: 125px;
+    min-height: 125px;
+    max-width: 125px;
+    max-height: 125px;
     background: white;
     color: #2563eb;
     border-radius: 50%;
-    border: 4px solid #1e293b;
+    border: 5px solid #1e293b;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 34px;
+    font-size: 42px;
     font-weight: 900;
-    margin: -40px auto 15px auto;
+    margin: -80px auto 20px;
     overflow: hidden;
-    position: relative;
-    z-index: 5;
 }
 
-    .preview-logo img {
+    .team-profile-logo img,
+    .team-details-logo img {
         width: 100%;
         height: 100%;
         object-fit: cover;
         border-radius: 50%;
     }
 
-.preview-content h3 {
+.team-profile-content h1,
+.team-details-content h1 {
     color: white;
-    font-size: 26px;
-    font-weight: 800;
-    margin-bottom: 10px;
-}
-
-.preview-content p {
-    color: white;
-    margin-bottom: 16px;
-}
-
-.preview-meta,
-.preview-info {
-    display: flex;
-    justify-content: center;
-    gap: 16px;
-    color: #cbd5e1;
-    flex-wrap: wrap;
-}
-
-/* TEAM DETAILS / PROFILE */
-.team-profile-page {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 35px 25px 80px;
-}
-
-.team-profile-back {
-    display: inline-block;
-    color: #93c5fd !important;
-    text-decoration: none;
-    font-weight: 700;
-    margin-bottom: 16px;
-}
-
-.team-profile-card {
-    background: #20252e;
-    overflow: hidden;
-    border: 1px solid rgba(255,255,255,0.08);
-    box-shadow: 0 18px 45px rgba(0,0,0,0.35);
-}
-
-.team-profile-banner {
-    height: 155px;
-    background: linear-gradient(135deg, #0b0ba8, #1111c7);
-}
-
-.team-profile-content {
-    padding: 0 65px 45px;
-    position: relative;
-}
-
-.team-profile-logo {
-    width: 125px;
-    height: 125px;
-    border-radius: 50%;
-    background: #0f172a;
-    border: 3px solid white;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 46px;
+    font-size: 38px;
     font-weight: 900;
-    color: white;
-    margin-top: -65px;
-    margin-bottom: 28px;
+    margin-bottom: 15px;
 }
 
-    .team-profile-logo img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-.team-profile-content h1 {
-    color: white;
-    font-size: 32px;
-    font-weight: 800;
-    margin-bottom: 16px;
-}
-
-.team-profile-meta {
+.team-profile-meta,
+.team-details-info {
     display: flex;
+    justify-content: center;
     align-items: center;
-    gap: 18px;
-    color: white;
-    font-weight: 700;
-    margin-bottom: 18px;
+    gap: 20px;
+    color: #cbd5e1;
+    margin-bottom: 25px;
     flex-wrap: wrap;
 }
 
 .team-profile-rank {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 7px;
 }
 
     .team-profile-rank img {
-        width: 24px;
-        height: 24px;
+        width: 22px;
+        height: 22px;
         object-fit: contain;
     }
 
@@ -538,23 +878,31 @@ body.scrim-body {
     margin-bottom: 34px;
 }
 
-    .team-profile-actions button {
-        background: transparent;
-        color: white;
-        border: 1px solid rgba(255,255,255,0.18);
-        border-radius: 999px;
-        padding: 10px 18px;
-        font-weight: 700;
-        cursor: pointer;
+    .team-profile-actions form {
+        width: 100%;
     }
 
-        .team-profile-actions button:hover {
-            border-color: #a855f7;
-            box-shadow: 0 0 0 1px rgba(168,85,247,0.4);
+        .team-profile-actions button,
+        .team-profile-actions form button {
+            width: 100%;
+            background: transparent;
+            color: white;
+            border: 1px solid rgba(255,255,255,0.18);
+            border-radius: 999px;
+            padding: 10px 18px;
+            font-weight: 700;
+            cursor: pointer;
         }
+
+            .team-profile-actions button:hover,
+            .team-profile-actions form button:hover {
+                border-color: #a855f7;
+                box-shadow: 0 0 0 1px rgba(168,85,247,0.4);
+            }
 
 .team-profile-section {
     margin-top: 30px;
+    text-align: left !important;
 }
 
     .team-profile-section h2 {
@@ -562,6 +910,7 @@ body.scrim-body {
         font-size: 18px;
         font-weight: 900;
         margin-bottom: 16px;
+        text-align: left !important;
     }
 
     .team-profile-section p {
@@ -569,40 +918,71 @@ body.scrim-body {
         font-weight: 600;
     }
 
+/* ROSTER */
+.roster-list {
+    width: 100%;
+    max-width: 620px;
+    margin: 0;
+    padding-left: 0;
+}
+
 .roster-player {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
+    justify-content: flex-start;
+    gap: 8px;
+    margin-bottom: 14px;
 }
 
 .roster-avatar {
-    width: 34px;
-    height: 34px;
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
     border-radius: 50%;
+    overflow: hidden;
     background: #111827;
-    border: 1px solid rgba(255,255,255,0.25);
+    border: 1px solid rgba(255,255,255,.15);
+    color: white;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 900;
-    flex-shrink: 0;
 }
 
-.roster-player span {
-    min-width: 140px;
+    .roster-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+.roster-name {
+    width: auto;
+    min-width: unset;
+    margin-right: 4px;
     color: white;
-    font-weight: 700;
+    font-weight: 800;
+    text-align: left;
 }
 
 .roster-rank {
-    min-width: 120px;
-    padding: 7px 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
     border-radius: 999px;
-    color: #9ca3af;
-    border: 1px solid rgba(255,255,255,0.12);
-    text-align: center;
+    background: rgba(255,255,255,.04);
+    border: 1px solid rgba(255,255,255,.1);
+    color: white;
+    font-weight: 700;
+    width: fit-content;
+    justify-content: flex-start;
 }
+
+    .roster-rank img {
+        width: 22px;
+        height: 22px;
+        object-fit: contain;
+    }
 
 .notes-section {
     border-top: 1px solid rgba(255,255,255,0.15);
@@ -613,105 +993,177 @@ body.scrim-body {
         color: #7b8190;
     }
 
-
-.team-details-page {
-    max-width: 900px;
+/* REQUESTS PAGE */
+.requests-page {
+    max-width: 1000px;
     margin: 0 auto;
-    padding: 45px 25px 80px;
+    padding: 40px 25px 80px;
 }
 
-.team-details-card {
-    background: #1e293b;
-    border-radius: 24px;
-    overflow: hidden;
-    box-shadow: 0 15px 40px rgba(0,0,0,.35);
-    border: 1px solid rgba(255,255,255,0.08);
-}
-
-.team-details-banner {
-    height: 150px;
-    background: linear-gradient(135deg, #2563eb, #7c3aed, #ec4899);
-}
-
-.team-details-content {
-    text-align: center;
-    padding: 30px;
-}
-
-.team-details-logo {
-    width: 95px;
-    height: 95px;
-    background: white;
-    color: #2563eb;
-    border-radius: 50%;
-    border: 5px solid #1e293b;
+.requests-header {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    font-size: 42px;
-    font-weight: 900;
-    margin: -80px auto 20px;
-    overflow: hidden;
+    margin-bottom: 32px;
 }
 
-    .team-details-logo img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 50%;
+    .requests-header h1 {
+        font-size: 42px;
+        font-weight: 900;
+        color: white;
+        margin-bottom: 6px;
     }
 
-.team-details-content h1 {
-    color: white;
-    font-size: 38px;
-    font-weight: 900;
-    margin-bottom: 15px;
-}
+    .requests-header p {
+        color: #94a3b8;
+        margin: 0;
+    }
 
-.team-details-info {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    color: #cbd5e1;
-    margin-bottom: 25px;
-}
-
-.team-details-bio {
-    color: #e2e8f0;
-    max-width: 600px;
-    margin: 0 auto 30px;
-}
-
-.back-btn {
-    display: inline-block;
+.requests-back-btn {
     background: linear-gradient(135deg,#2563eb,#7c3aed);
     color: white !important;
-    padding: 12px 24px;
+    padding: 12px 20px;
     border-radius: 12px;
-    text-decoration: none;
-    font-weight: bold;
+    text-decoration: none !important;
+    font-weight: 800;
 }
 
-    .back-btn:hover {
-        color: white !important;
-        transform: translateY(-2px);
+.requests-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.request-card {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    background: #1e293b;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: 0 14px 35px rgba(0,0,0,0.28);
+}
+
+.request-avatar {
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: #0f172a;
+    border: 2px solid rgba(255,255,255,0.14);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: 900;
+    flex-shrink: 0;
+}
+
+.request-info {
+    flex: 1;
+}
+
+    .request-info h2 {
+        color: white;
+        font-size: 24px;
+        font-weight: 900;
+        margin: 0 0 4px;
     }
 
+    .request-info p {
+        color: #cbd5e1;
+        margin: 0 0 8px;
+    }
+
+.request-status {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: rgba(245, 158, 11, 0.14);
+    color: #fbbf24;
+    font-weight: 800;
+    font-size: 13px;
+}
+
+.request-actions {
+    display: flex;
+    gap: 10px;
+}
+
+    .request-actions form {
+        margin: 0;
+    }
+
+    .request-actions button {
+        border: none;
+        border-radius: 12px;
+        padding: 10px 16px;
+        color: white;
+        font-weight: 900;
+        cursor: pointer;
+    }
+
+.request-accept {
+    background: linear-gradient(135deg,#16a34a,#22c55e);
+}
+
+.request-decline {
+    background: linear-gradient(135deg,#dc2626,#ef4444);
+}
+
+.requests-empty {
+    background: #1e293b;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 22px;
+    padding: 55px 30px;
+    text-align: center;
+    box-shadow: 0 14px 35px rgba(0,0,0,0.28);
+}
+
+.requests-empty-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+}
+
+.requests-empty h2 {
+    color: white;
+    font-size: 30px;
+    font-weight: 900;
+}
+
+.requests-empty p {
+    color: #94a3b8;
+}
+
+/* FOOTER */
+.scrim-footer {
+    padding: 20px 0;
+    color: rgba(255,255,255,0.7);
+}
+
+/* RESPONSIVE */
 @media (max-width: 900px) {
-    .teams-header {
+    .teams-header,
+    .my-teams-header,
+    .requests-header {
         display: block;
     }
 
-    .btn-create {
+    .btn-create,
+    .requests-back-btn {
         margin-top: 18px;
+        display: inline-block;
     }
 
-    .create-team-page {
+    .create-team-page,
+    .auth-register-page {
         grid-template-columns: 1fr;
         padding: 25px 15px;
     }
 
-    .team-row-card {
+    .team-row-card,
+    .request-card {
         flex-wrap: wrap;
     }
 
@@ -719,130 +1171,95 @@ body.scrim-body {
         min-width: 180px;
     }
 
-    .team-row-btn {
+    .team-row-btn,
+    .request-actions,
+    .request-actions form,
+    .request-actions button {
         width: 100%;
-        text-align: center;
-    }
-
-    .team-profile-content {
-        padding: 0 24px 35px;
     }
 
     .team-profile-actions {
         grid-template-columns: 1fr 1fr;
     }
-}
 
-.team-row-card:focus,
-.team-row-btn:focus,
-.btn-create:focus,
-.btn-create-team:focus {
-    outline: none !important;
-    box-shadow: none !important;
-}
-
-.auth-register-page {
-    max-width: 1250px;
-    margin: 0 auto;
-    padding: 40px 25px 80px;
-    display: grid;
-    grid-template-columns: 1.25fr 1fr;
-    gap: 40px;
-    align-items: start;
-}
-
-    .auth-register-page .auth-card {
-        max-width: none;
+    .roster-player {
+        flex-wrap: wrap;
     }
 
-.register-preview {
-    width: 100%;
-}
-
-    .register-preview h2 {
-        font-size: 34px;
-        font-weight: 900;
-        color: white;
-        margin-bottom: 14px;
+    .scrim-toast {
+        width: calc(100% - 32px);
+        right: 16px;
     }
-
-.register-preview-card {
-    background: #1e293b;
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 12px 30px rgba(0,0,0,.30);
 }
-
-.register-preview-banner {
-    height: 120px;
-    background: linear-gradient(135deg,#2563eb,#7c3aed,#ec4899);
-}
-
-.register-preview-content {
-    padding: 20px;
-    text-align: center;
-}
-
-.register-preview-logo {
-    width: 80px;
-    height: 80px;
-    background: white;
-    color: #2563eb;
-    border-radius: 50%;
-    border: 4px solid #1e293b;
-    display: flex;
-    justify-content: center;
+.request-rank {
+    display: inline-flex;
     align-items: center;
-    font-size: 34px;
-    font-weight: 900;
-    margin: -60px auto 15px auto;
-    overflow: hidden;
-    position: relative;
-    z-index: 5;
-}
-
-    .register-preview-logo img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 50%;
-    }
-
-.register-preview-content h3 {
+    gap: 7px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.12);
     color: white;
-    font-size: 26px;
-    font-weight: 900;
-    margin-bottom: 10px;
+    font-weight: 800;
+    margin: 6px 0 10px;
 }
 
-.register-preview-content p {
-    color: #cbd5e1;
-    margin-bottom: 16px;
-}
-
-.register-preview-meta {
-    display: flex;
-    justify-content: center;
-    gap: 16px;
-    color: #cbd5e1;
-    flex-wrap: wrap;
-}
-
-.register-preview-rank {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-    .register-preview-rank img {
+    .request-rank img {
         width: 22px;
         height: 22px;
         object-fit: contain;
     }
-
-@media (max-width: 900px) {
-    .auth-register-page {
-        grid-template-columns: 1fr;
-        padding: 25px 15px;
-    }
+.captain-player {
+    background: rgba(250, 204, 21, 0.04);
+    border-radius: 14px;
+    padding: 6px 8px;
 }
+
+.captain-name {
+    color: #facc15 !important;
+    font-weight: 900 !important;
+}
+
+.captain-crown {
+    margin-right: 4px;
+}
+
+.captain-badge {
+    margin-left: 8px;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: rgba(250,204,21,.15);
+    border: 1px solid rgba(250,204,21,.35);
+    color: #facc15;
+    font-size: 12px;
+    font-weight: 900;
+}
+.request-top-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 6px;
+}
+
+    .request-top-row h2 {
+        margin: 0;
+    }
+
+.request-rank {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.04);
+    border: 1px solid rgba(255,255,255,.1);
+    font-size: 14px;
+    font-weight: 700;
+    color: white;
+}
+
+    .request-rank img {
+        width: 20px;
+        height: 20px;
+        object-fit: contain;
+    }

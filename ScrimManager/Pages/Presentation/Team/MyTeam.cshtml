@@ -1,0 +1,73 @@
+﻿@page
+@model ScrimManagerPresentation.Pages.Presentation.Team.MyTeamModel
+
+<div class="my-teams-page">
+
+    <div class="my-teams-header">
+        <div>
+            <h1>🏆 My Teams</h1>
+            <p>Bekijk alle teams die jij hebt aangemaakt.</p>
+        </div>
+
+        <a asp-page="./CreateTeam" class="btn-create">
+            + Create Team
+        </a>
+    </div>
+
+    @if (Model.UserTeams == null || !Model.UserTeams.Any())
+    {
+        <div class="my-teams-empty">
+            <h2>No teams yet</h2>
+            <p>Je hebt nog geen teams aangemaakt.</p>
+
+            <a asp-page="./CreateTeam" class="team-row-btn">
+                Create your first team
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="my-teams-grid">
+            @foreach (var team in Model.UserTeams)
+            {
+                <div class="my-team-card">
+                    <div class="my-team-banner"></div>
+
+                    <div class="my-team-content">
+
+                        <div class="my-team-logo">
+                            @if (team.LogoData != null && team.LogoData.Length > 0)
+                            {
+                                <img src="data:image/png;base64,@Convert.ToBase64String(team.LogoData)" alt="Team Logo" />
+                            }
+                            else
+                            {
+                                @team.Name.Substring(0, 1).ToUpper()
+                            }
+                        </div>
+
+                        <h2>@team.Name</h2>
+
+                        <div class="my-team-meta">
+                            <span>🌍 @team.Teamregion</span>
+                            <span>🏆 @team.Teamrank</span>
+                        </div>
+
+                        <p class="my-team-description">
+                            @(string.IsNullOrWhiteSpace(team.Description)
+                                ? "No team description yet."
+                                : team.Description)
+                        </p>
+
+                        <a asp-page="/Presentation/Team/TeamDetails"
+                           asp-route-id="@team.Id"
+                           class="my-team-btn">
+                            View Team
+                        </a>
+
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

@@ -54,7 +54,7 @@
     <div class="team-profile-page">
         <div class="team-profile-card">
             <div class="team-profile-content">
-                <h1>Team niet gevonden</h1>
+                <h1>Team not found</h1>
                 <a asp-page="./TeamIndex" class="back-btn">Back to Teams</a>
             </div>
         </div>
@@ -64,6 +64,7 @@ else
 {
     var logoBase64 = "";
     var hasLogo = Model.Team.LogoData != null && Model.Team.LogoData.Length > 0;
+    var captainId = Model.Team.CreatedByUserId;
 
     if (hasLogo)
     {
@@ -71,15 +72,12 @@ else
     }
 
     <div class="team-profile-page">
-
         <a asp-page="./TeamIndex" class="team-profile-back">← Back to Teams</a>
 
         <div class="team-profile-card">
-
             <div class="team-profile-banner"></div>
 
             <div class="team-profile-content">
-
                 <div class="team-profile-logo">
                     @if (hasLogo)
                     {
@@ -106,7 +104,13 @@ else
                 <p class="team-created">Created at June 2026</p>
 
                 <div class="team-profile-actions">
-                    <button type="button">🤝 Connect</button>
+                    <form method="post"
+                          asp-page-handler="Apply"
+                          asp-route-id="@Model.Team.Id"
+                          class="team-action-form">
+                        <button type="submit">🤝 Apply</button>
+                    </form>
+
                     <button type="button">🚀 Avoid</button>
                     <button type="button">⚔️ Play</button>
                     <button type="button">💬 Chat</button>
@@ -124,30 +128,57 @@ else
                 <section class="team-profile-section">
                     <h2>ROSTER</h2>
 
-                    <div class="roster-player">
-                        <div class="roster-avatar">P</div>
-                        <span>Player 1</span>
-                        <div class="roster-rank">Coming soon</div>
-                    </div>
+                    @if (Model.TeamMembers == null || !Model.TeamMembers.Any())
+                    {
+                        <p>There are no players in this team yet.</p>
+                    }
+                    else
+                    {
+                        <div class="roster-list">
+                            @foreach (var user in Model.TeamMembers)
+                            {
+                                var isCaptain = user.Id == captainId;
 
-                    <div class="roster-player">
-                        <div class="roster-avatar">P</div>
-                        <span>Player 2</span>
-                        <div class="roster-rank">Coming soon</div>
-                    </div>
+                                <div class="roster-player @(isCaptain ? "captain-player" : "")">
+                                    <div class="roster-avatar">
+                                        @if (user.UserLogo != null && user.UserLogo.Length > 0)
+                                        {
+                                            <img src="data:image/png;base64,@Convert.ToBase64String(user.UserLogo)" alt="@user.Username" />
+                                        }
+                                        else
+                                        {
+                                            @user.Username.Substring(0, 1).ToUpper()
+                                        }
+                                    </div>
 
-                    <div class="roster-player">
-                        <div class="roster-avatar">P</div>
-                        <span>Player 3</span>
-                        <div class="roster-rank">Coming soon</div>
-                    </div>
+                                    <div class="roster-name @(isCaptain ? "captain-name" : "")">
+                                        @if (isCaptain)
+                                        {
+                                            <span class="captain-crown">👑</span>
+                                        }
+
+                                        @user.Username
+
+                                        @if (isCaptain)
+                                        {
+                                            <span class="captain-badge">Captain</span>
+                                        }
+                                    </div>
+
+                                    <div class="roster-rank">
+                                        <img src="@GetRankImage(user.UserRank.ToString())" alt="@user.UserRank" />
+                                        <span>@FormatRank(user.UserRank.ToString())</span>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
                 </section>
 
                 <section class="team-profile-section notes-section">
                     <h2>NOTES</h2>
                     <p>Click here to add your note</p>
                 </section>
-
             </div>
         </div>
     </div>

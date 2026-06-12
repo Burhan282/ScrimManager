@@ -69,6 +69,38 @@ namespace ScrimManagerDataAccess
                 return null;
             }
 
+            return MapUser(reader, dbPassword);
+        }
+
+        public User? GetById(int id)
+        {
+            using var conn = new NpgsqlConnection(connectionString);
+            conn.Open();
+
+            string query = @"
+                SELECT id, username, email, password_hash, role, rank, region, user_logo, description
+                FROM ""user""
+                WHERE id = @id
+                LIMIT 1;
+            ";
+
+            using var cmd = new NpgsqlCommand(query, conn);
+            cmd.Parameters.AddWithValue("id", id);
+
+            using var reader = cmd.ExecuteReader();
+
+            if (!reader.Read())
+            {
+                return null;
+            }
+
+            string dbPassword = reader["password_hash"]?.ToString() ?? "";
+
+            return MapUser(reader, dbPassword);
+        }
+
+        private User MapUser(NpgsqlDataReader reader, string dbPassword)
+        {
             return new User
             {
                 Id = Convert.ToInt32(reader["id"]),

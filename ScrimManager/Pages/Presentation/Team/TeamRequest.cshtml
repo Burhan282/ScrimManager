@@ -1,0 +1,125 @@
+﻿@page
+@model ScrimManagerPresentation.Pages.Presentation.Team.TeamRequestModel
+
+@{
+    ViewData["Title"] = "Team Requests";
+}
+
+@functions {
+    public string GetRankImage(string rank)
+    {
+        return rank switch
+        {
+            "BronzeI" => "/Images/Ranks/Bronze 1.webp",
+            "BronzeII" => "/Images/Ranks/Bronze 2.jpg",
+            "BronzeIII" => "/Images/Ranks/Bronze 3.webp",
+            "SilverI" => "/Images/Ranks/Silver 1.png",
+            "SilverII" => "/Images/Ranks/Silver 2.png",
+            "SilverIII" => "/Images/Ranks/Silver 3.jpg",
+            "GoldI" => "/Images/Ranks/Gold 1.webp",
+            "GoldII" => "/Images/Ranks/Gold 2.jpg",
+            "GoldIII" => "/Images/Ranks/Gold 3.png",
+            "PlatinumI" => "/Images/Ranks/Plat 1.png",
+            "PlatinumII" => "/Images/Ranks/Plat 2.png",
+            "PlatinumIII" => "/Images/Ranks/PLat 3.webp",
+            "DiamondI" => "/Images/Ranks/Diamond 1.png",
+            "DiamondII" => "/Images/Ranks/Diamond 2.jpg",
+            "DiamondIII" => "/Images/Ranks/Diamond 3.png",
+            "ChampionI" => "/Images/Ranks/Champion 1.webp",
+            "ChampionII" => "/Images/Ranks/Champion 2.webp",
+            "ChampionIII" => "/Images/Ranks/Champion 3.webp",
+            "GrandChampionI" => "/Images/Ranks/Grand Champion 1.jpg",
+            "GrandChampionII" => "/Images/Ranks/Grand Champion 2.jpg",
+            "GrandChampionIII" => "/Images/Ranks/Grand Champion 3.jpg",
+            "SSL" => "/Images/Ranks/Super Sonic Legend.png",
+            _ => "/Images/Ranks/default.png"
+        };
+    }
+
+    public string FormatRank(string rank)
+    {
+        return rank
+            .Replace("GrandChampion", "Grand Champion ")
+            .Replace("Champion", "Champion ")
+            .Replace("Diamond", "Diamond ")
+            .Replace("Platinum", "Platinum ")
+            .Replace("Gold", "Gold ")
+            .Replace("Silver", "Silver ")
+            .Replace("Bronze", "Bronze ");
+    }
+}
+
+<div class="requests-page">
+
+    <div class="requests-header">
+        <div>
+            <h1>🔔 Team Requests</h1>
+            <p>Manage players who want to join your teams.</p>
+        </div>
+
+        <a asp-page="/Presentation/Team/MyTeam" class="requests-back-btn">
+            ← Back to My Teams
+        </a>
+    </div>
+
+    @if (Model.Requests == null || !Model.Requests.Any())
+    {
+        <div class="requests-empty">
+            <div class="requests-empty-icon">📭</div>
+            <h2>No requests yet</h2>
+            <p>There are currently no pending join requests.</p>
+        </div>
+    }
+    else
+    {
+        <div class="requests-list">
+            @foreach (var request in Model.Requests)
+            {
+                <div class="request-card">
+
+                    <div class="request-avatar">
+                        @request.Username.Substring(0, 1).ToUpper()
+                    </div>
+
+                    <div class="request-info">
+
+                        <div class="request-top-row">
+                            <h2>@request.Username</h2>
+
+                            <div class="request-rank">
+                                <img src="@GetRankImage(request.UserRank.ToString())" alt="@request.UserRank" />
+                                <span>@FormatRank(request.UserRank.ToString())</span>
+                            </div>
+                        </div>
+
+                        <p>
+                            Wants to join
+                            <strong>@request.TeamName</strong>
+                        </p>
+
+                        <span class="request-status">
+                            Pending
+                        </span>
+                    </div>
+
+                    <div class="request-actions">
+                        <form method="post" asp-page-handler="Accept">
+                            <input type="hidden" name="requestId" value="@request.Id" />
+                            <button type="submit" class="request-accept">
+                                ✓ Accept
+                            </button>
+                        </form>
+
+                        <form method="post" asp-page-handler="Decline">
+                            <input type="hidden" name="requestId" value="@request.Id" />
+                            <button type="submit" class="request-decline">
+                                ✕ Decline
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+            }
+        </div>
+    }
+</div>

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ScrimManagerApplication.Application;
@@ -11,16 +12,16 @@ namespace ScrimManagerPresentation.Pages.Presentation.Team
     {
         private readonly TeamService _teamService;
 
+        public CreateTeamModel(TeamService teamService)
+        {
+            _teamService = teamService;
+        }
+
         [BindProperty]
         public CreateTeamDTO CreateTeamDTO { get; set; } = new();
 
         [BindProperty]
         public IFormFile? LogoFile { get; set; }
-
-        public CreateTeamModel(TeamService teamService)
-        {
-            _teamService = teamService;
-        }
 
         public async Task<IActionResult> OnPostAsync()
         {
@@ -28,6 +29,9 @@ namespace ScrimManagerPresentation.Pages.Presentation.Team
 
             if (userId == null || userId <= 0)
             {
+                TempData["ToastMessage"] = "You must be logged in to create a team.";
+                TempData["ToastType"] = "failed";
+
                 return RedirectToPage("/Presentation/Account/Login");
             }
 
@@ -40,10 +44,16 @@ namespace ScrimManagerPresentation.Pages.Presentation.Team
 
             if (!ModelState.IsValid)
             {
+                TempData["ToastMessage"] = "Team could not be created. Check your input.";
+                TempData["ToastType"] = "failed";
+
                 return Page();
             }
 
             _teamService.CreateTeam(CreateTeamDTO, userId.Value);
+
+            TempData["ToastMessage"] = "Team created successfully.";
+            TempData["ToastType"] = "success";
 
             return RedirectToPage("/Presentation/Team/TeamIndex");
         }

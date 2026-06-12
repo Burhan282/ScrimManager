@@ -1,9 +1,10 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ScrimManagerApplication.Application;
-using ScrimManagerApplication.Application.Models;
-using Microsoft.AspNetCore.Http;
 using ScrimManagerApplication.Application.Models.DTOModels;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace ScrimManagerPresentation.Pages.Presentation.Account
 {
@@ -24,12 +25,11 @@ namespace ScrimManagerPresentation.Pages.Presentation.Account
 
         public void OnGet()
         {
-
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
-           if (LogoFile != null && LogoFile.Length > 0)
+            if (LogoFile != null && LogoFile.Length > 0)
             {
                 using var memoryStream = new MemoryStream();
                 await LogoFile.CopyToAsync(memoryStream);
@@ -37,10 +37,11 @@ namespace ScrimManagerPresentation.Pages.Presentation.Account
             }
 
             _authService.Register(CreateUserDTO);
-                
-            
 
-            return RedirectToPage("/Presentation/HomePage/Index");
+            TempData["ToastMessage"] = "Account created successfully.";
+            TempData["ToastType"] = "success";
+
+            return RedirectToPage("/Presentation/Account/Login");
         }
     }
 }
