@@ -157,7 +157,7 @@ namespace ScrimManagerDataAcces.DataAcces.Repositories
             return requests;
         }
 
-        public int? AcceptJoinRequest(int requestId)
+        public int? AcceptJoinRequest(int requestId, int captainUserId)
         {
             using var conn = new NpgsqlConnection(connectionString);
             conn.Open();
@@ -166,9 +166,11 @@ namespace ScrimManagerDataAcces.DataAcces.Repositories
 
             string selectQuery = @"
                 SELECT user_id, team_id
-                FROM team_join_request
-                WHERE id = @requestId
-                  AND status = 'Pending';
+                FROM team_join_request request
+                INNER JOIN team ON team.id = request.team_id
+                WHERE request.id = @requestId
+                  AND request.status = 'Pending'
+                  AND team.created_by_user_id = @captainUserId;
             ";
 
             int userId;
@@ -177,6 +179,7 @@ namespace ScrimManagerDataAcces.DataAcces.Repositories
             using (var selectCmd = new NpgsqlCommand(selectQuery, conn, transaction))
             {
                 selectCmd.Parameters.AddWithValue("@requestId", requestId);
+                selectCmd.Parameters.AddWithValue("@captainUserId", captainUserId);
 
                 using var reader = selectCmd.ExecuteReader();
 
@@ -222,20 +225,24 @@ namespace ScrimManagerDataAcces.DataAcces.Repositories
             return teamId;
         }
 
-        public void DeclineJoinRequest(int requestId)
+        public void DeclineJoinRequest(int requestId, int captainUserId)
         {
             using var conn = new NpgsqlConnection(connectionString);
             conn.Open();
 
             string query = @"
-                UPDATE team_join_request
+                UPDATE team_join_request request
                 SET status = 'Declined'
-                WHERE id = @requestId
-                  AND status = 'Pending';
+                FROM team
+                WHERE request.id = @requestId
+                  AND request.status = 'Pending'
+                  AND team.id = request.team_id
+                  AND team.created_by_user_id = @captainUserId;
             ";
 
             using var cmd = new NpgsqlCommand(query, conn);
             cmd.Parameters.AddWithValue("@requestId", requestId);
+            cmd.Parameters.AddWithValue("@captainUserId", captainUserId);
 
             cmd.ExecuteNonQuery();
         }

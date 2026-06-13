@@ -1,0 +1,313 @@
+@page "/tournaments/details/{id:int}"
+@model ScrimManagerPresentation.Pages.Presentation.Tournament.TournamentDetailsModel
+
+@{
+    ViewData["Title"] = "Tournament Details";
+    bool isFull = Model.Tournament != null
+        && Model.Tournament.ParticipatingTeams >= Model.Tournament.MaxTeams;
+}
+
+<style>
+    .tournament-details-page {
+        max-width: 1100px;
+        margin: 38px auto;
+        padding: 0 24px 40px;
+    }
+
+    .tournament-details-back {
+        display: inline-block;
+        margin-bottom: 18px;
+        color: #7dd3fc;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .tournament-details-card {
+        padding: 28px;
+        border: 1px solid rgba(255,255,255,.1);
+        border-radius: 14px;
+        background: #0f2f4a;
+        color: white;
+        box-shadow: 0 12px 30px rgba(0,0,0,.25);
+    }
+
+    .tournament-details-heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 20px;
+        margin-bottom: 24px;
+    }
+
+    .tournament-details-heading h1 {
+        margin: 0 0 6px;
+        font-size: 34px;
+    }
+
+    .tournament-status {
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: #16a34a;
+        font-size: 13px;
+        font-weight: 800;
+        white-space: nowrap;
+    }
+
+    .tournament-status.full {
+        background: #dc2626;
+    }
+
+    .tournament-summary {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+        margin-bottom: 30px;
+    }
+
+    .tournament-summary-item {
+        padding: 14px;
+        border: 1px solid rgba(255,255,255,.1);
+        border-radius: 10px;
+        background: rgba(255,255,255,.05);
+    }
+
+    .tournament-summary-label {
+        display: block;
+        margin-bottom: 5px;
+        color: #93c5fd;
+        font-size: 12px;
+        font-weight: 800;
+        text-transform: uppercase;
+    }
+
+    .tournament-participants-title {
+        margin: 0 0 14px;
+        font-size: 22px;
+    }
+
+    .participation-list {
+        overflow: hidden;
+        border: 1px solid rgba(255,255,255,.14);
+        border-radius: 10px;
+    }
+
+    .participation-row {
+        display: grid;
+        grid-template-columns: minmax(230px, 1.2fr) 150px minmax(280px, 2fr) auto;
+        align-items: center;
+        gap: 22px;
+        min-height: 82px;
+        padding: 14px 18px;
+        background: #10283d;
+    }
+
+    .participation-row + .participation-row {
+        border-top: 1px solid rgba(255,255,255,.12);
+    }
+
+    .participation-team {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        min-width: 0;
+    }
+
+    .participation-logo {
+        width: 46px;
+        height: 46px;
+        flex: 0 0 46px;
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+        border-radius: 50%;
+        background: #dbe2e8;
+        color: #64748b;
+        font-size: 18px;
+        font-weight: 800;
+    }
+
+    .participation-logo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .participation-name {
+        margin: 0;
+        overflow: hidden;
+        color: white;
+        font-size: 17px;
+        font-weight: 800;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .participation-format {
+        color: #bfdbfe;
+        font-size: 14px;
+    }
+
+    .team-details-link {
+        color: #7dd3fc;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .participation-players {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        min-width: 0;
+    }
+
+    .players-icon {
+        flex: 0 0 auto;
+        font-size: 20px;
+    }
+
+    .players-names {
+        overflow: hidden;
+        color: #e2e8f0;
+        font-size: 14px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .no-participations {
+        padding: 24px;
+        border: 1px dashed rgba(255,255,255,.2);
+        border-radius: 10px;
+        color: #bfdbfe;
+        text-align: center;
+    }
+
+    @@media (max-width: 760px) {
+        .tournament-summary {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .tournament-details-heading {
+            flex-direction: column;
+        }
+
+        .participation-row {
+            grid-template-columns: 1fr auto;
+            gap: 10px 16px;
+        }
+
+        .participation-format,
+        .participation-players {
+            grid-column: 1 / -1;
+        }
+
+        .participation-players {
+            padding-left: 59px;
+        }
+    }
+
+    @@media (max-width: 480px) {
+        .tournament-summary {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="tournament-details-page">
+    <a asp-page="/Presentation/Tournament/TournamentIndex" class="tournament-details-back">
+        &larr; Back to Tournaments
+    </a>
+
+    @if (Model.Tournament != null)
+    {
+        <div class="tournament-details-card">
+            <div class="tournament-details-heading">
+                <div>
+                    <h1>@Model.Tournament.Naam</h1>
+                    <span>Organized by @Model.Tournament.Organisator</span>
+                </div>
+
+                <span class="tournament-status @(isFull ? "full" : "")">
+                    @(isFull ? "Tournament Full" : Model.Tournament.Status)
+                </span>
+            </div>
+
+            <div class="tournament-summary">
+                <div class="tournament-summary-item">
+                    <span class="tournament-summary-label">Start</span>
+                    @Model.Tournament.Datum.ToString("dd-MM-yyyy HH:mm")
+                </div>
+                <div class="tournament-summary-item">
+                    <span class="tournament-summary-label">Format</span>
+                    @Model.Tournament.Format
+                </div>
+                <div class="tournament-summary-item">
+                    <span class="tournament-summary-label">Registered</span>
+                    @Model.Tournament.ParticipatingTeams / @Model.Tournament.MaxTeams
+                </div>
+                <div class="tournament-summary-item">
+                    <span class="tournament-summary-label">Prize Money</span>
+                    &euro;@(Model.Tournament.PrizeMoney?.ToString("0.##") ?? "0")
+                </div>
+            </div>
+
+            <h2 class="tournament-participants-title">
+                Participants (@Model.Participations.Count)
+            </h2>
+
+            @if (!Model.Participations.Any())
+            {
+                <div class="no-participations">
+                    No teams or players have joined this tournament yet.
+                </div>
+            }
+            else
+            {
+                <div class="participation-list">
+                    @foreach (var participation in Model.Participations)
+                    {
+                        string initial = string.IsNullOrWhiteSpace(participation.DisplayName)
+                            ? "?"
+                            : participation.DisplayName.Substring(0, 1).ToUpperInvariant();
+                        string playerNames = participation.Players.Any()
+                            ? string.Join(" / ", participation.Players.Select(player => player.Username))
+                            : "No players selected";
+
+                        <article class="participation-row">
+                            <div class="participation-team">
+                                <div class="participation-logo">
+                                    @if (participation.TeamLogoData != null && participation.TeamLogoData.Length > 0)
+                                    {
+                                        <img src="data:image/png;base64,@Convert.ToBase64String(participation.TeamLogoData)"
+                                             alt="@participation.DisplayName logo" />
+                                    }
+                                    else
+                                    {
+                                        @initial
+                                    }
+                                </div>
+
+                                <div class="participation-name">@participation.DisplayName</div>
+                            </div>
+
+                            <div class="participation-format">@Model.Tournament.Format Bracket</div>
+
+                            <div class="participation-players">
+                                <span class="players-icon" aria-hidden="true">&#128101;</span>
+                                <span class="players-names">@playerNames</span>
+                            </div>
+
+                            @if (participation.TeamId.HasValue)
+                            {
+                                <a asp-page="/Presentation/Team/TeamDetails"
+                                   asp-route-id="@participation.TeamId.Value"
+                                   class="team-details-link">
+                                    View Team
+                                </a>
+                            }
+                        </article>
+                    }
+                </div>
+            }
+        </div>
+    }
+</div>

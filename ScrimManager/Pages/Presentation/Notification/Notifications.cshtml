@@ -1,0 +1,105 @@
+@page "/notifications"
+@model ScrimManagerPresentation.Pages.Presentation.Notification.NotificationsModel
+
+@{
+    ViewData["Title"] = "Notifications";
+    int totalCount = Model.TeamRequests.Count + Model.TournamentInvitations.Count;
+}
+
+<div class="requests-page">
+    <div class="requests-header">
+        <div>
+            <h1>Notifications</h1>
+            <p>Manage team requests and tournament invitations.</p>
+        </div>
+
+        <span class="notifications-total">@totalCount pending</span>
+    </div>
+
+    @if (totalCount == 0)
+    {
+        <div class="requests-empty">
+            <div class="requests-empty-icon">&#128236;</div>
+            <h2>No notifications</h2>
+            <p>You currently have no pending requests or invitations.</p>
+        </div>
+    }
+    else
+    {
+        @if (Model.TournamentInvitations.Any())
+        {
+            <section class="notification-section">
+                <h2>Tournament Invitations</h2>
+
+                <div class="requests-list">
+                    @foreach (var invitation in Model.TournamentInvitations)
+                    {
+                        <div class="request-card">
+                            <div class="request-avatar">
+                                @invitation.TournamentName.Substring(0, 1).ToUpperInvariant()
+                            </div>
+
+                            <div class="request-info">
+                                <h2>@invitation.TournamentName</h2>
+                                <p>
+                                    <strong>@invitation.TeamName</strong> selected you for
+                                    @invitation.Format.
+                                </p>
+                                <p>Starts @invitation.StartDate.ToString("dd-MM-yyyy HH:mm")</p>
+                                <span class="request-status">Pending acceptance</span>
+                            </div>
+
+                            <div class="request-actions">
+                                <form method="post" asp-page-handler="AcceptTournament">
+                                    <input type="hidden" name="invitationId" value="@invitation.Id" />
+                                    <button type="submit" class="request-accept">Accept</button>
+                                </form>
+
+                                <form method="post" asp-page-handler="DeclineTournament">
+                                    <input type="hidden" name="invitationId" value="@invitation.Id" />
+                                    <button type="submit" class="request-decline">Decline</button>
+                                </form>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </section>
+        }
+
+        @if (Model.TeamRequests.Any())
+        {
+            <section class="notification-section">
+                <h2>Team Requests</h2>
+
+                <div class="requests-list">
+                    @foreach (var request in Model.TeamRequests)
+                    {
+                        <div class="request-card">
+                            <div class="request-avatar">
+                                @request.Username.Substring(0, 1).ToUpperInvariant()
+                            </div>
+
+                            <div class="request-info">
+                                <h2>@request.Username</h2>
+                                <p>Wants to join <strong>@request.TeamName</strong>.</p>
+                                <span class="request-status">Pending</span>
+                            </div>
+
+                            <div class="request-actions">
+                                <form method="post" asp-page-handler="AcceptTeam">
+                                    <input type="hidden" name="requestId" value="@request.Id" />
+                                    <button type="submit" class="request-accept">Accept</button>
+                                </form>
+
+                                <form method="post" asp-page-handler="DeclineTeam">
+                                    <input type="hidden" name="requestId" value="@request.Id" />
+                                    <button type="submit" class="request-decline">Decline</button>
+                                </form>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </section>
+        }
+    }
+</div>

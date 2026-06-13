@@ -1,5 +1,6 @@
 ﻿using ScrimManagerApplication.Application;
 using ScrimManagerApplication.Application.Models;
+using ScrimManagerApplication.Application.Models.DTOModels;
 using ScrimManagerDataAcces.DataAcces.FakeDataBases;
 
 namespace ScrimManagerTests
@@ -17,23 +18,20 @@ namespace ScrimManagerTests
             TournamentService service =
                 new TournamentService(fakeRepository);
 
-            Tournament tournament = new Tournament
+            CreateTournamentDTO tournament = new CreateTournamentDTO
             {
                 Naam = "Rocket League Cup",
                 Organisator = "Burhan",
                 Format = "3v3",
                 MaxTeams = 8,
-                Status = "Open",
                 Description = "Test tournament",
                 PrizeMoney = 100,
-                ParticipatingTeams = 0
+                SelectedDate = DateTime.Now,
+                SelectedTime = new TimeSpan(18, 0, 0)
             };
 
            
-            service.CreateTournament(
-                tournament,
-                DateTime.Now,
-                new TimeSpan(18, 0, 0));
+            service.CreateTournament(tournament);
 
             
             List<Tournament> tournaments =

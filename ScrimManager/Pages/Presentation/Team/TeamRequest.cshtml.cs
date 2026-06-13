@@ -32,14 +32,24 @@ namespace ScrimManagerPresentation.Pages.Presentation.Team
 
         public IActionResult OnPostAccept(int requestId)
         {
-            _teamService.AcceptJoinRequest(requestId);
+            int? userId = HttpContext.Session.GetInt32("UserId");
+
+            if (userId == null)
+                return RedirectToPage("/Presentation/Account/Login");
+
+            _teamService.AcceptJoinRequest(requestId, userId.Value);
 
             return RedirectToPage();
         }
 
         public IActionResult OnPostDecline(int requestId)
         {
-            _teamService.DeclineJoinRequest(requestId);
+            int? userId = HttpContext.Session.GetInt32("UserId");
+
+            if (userId == null)
+                return RedirectToPage("/Presentation/Account/Login");
+
+            _teamService.DeclineJoinRequest(requestId, userId.Value);
 
             return RedirectToPage();
         }

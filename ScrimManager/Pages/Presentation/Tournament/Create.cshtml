@@ -1,4 +1,4 @@
-﻿@page "/tournaments/create"
+﻿@page "/tournaments/Create"
 @model ScrimManagerPresentation.Pages.Presentation.Tournament.CreateModel
 
 @{
@@ -22,32 +22,32 @@
                 <div class="form-grid">
 
                     <div class="form-group form-group-full">
-                        <label asp-for="Tournament.Naam"></label>
-                        <input asp-for="Tournament.Naam" class="form-control" />
-                        <span asp-validation-for="Tournament.Naam" class="field-validation-error"></span>
+                        <label asp-for="CreateTournamentDTO.Naam"></label>
+                        <input asp-for="CreateTournamentDTO.Naam" class="form-control" />
+                        <span asp-validation-for="CreateTournamentDTO.Naam" class="field-validation-error"></span>
                     </div>
 
                     <div class="form-group form-group-full">
-                        <label asp-for="Tournament.Organisator"></label>
-                        <input asp-for="Tournament.Organisator" class="form-control" />
-                        <span asp-validation-for="Tournament.Organisator" class="field-validation-error"></span>
+                        <label asp-for="CreateTournamentDTO.Organisator"></label>
+                        <input asp-for="CreateTournamentDTO.Organisator" class="form-control" />
+                        <span asp-validation-for="CreateTournamentDTO.Organisator" class="field-validation-error"></span>
                     </div>
 
                     <div class="form-group">
-                        <label asp-for="SelectedDate"></label>
-                        <input asp-for="SelectedDate" type="date" class="form-control" />
-                        <span asp-validation-for="SelectedDate"></span>
+                        <label asp-for="CreateTournamentDTO.SelectedDate"></label>
+                        <input asp-for="CreateTournamentDTO.SelectedDate" type="date" class="form-control" />
+                        <span asp-validation-for="CreateTournamentDTO.SelectedDate"></span>
                     </div>
 
                     <div class="form-group">
-                        <label asp-for="SelectedTime"></label>
-                        <input asp-for="SelectedTime" type="time" class="form-control" />
-                        <span asp-validation-for="SelectedTime"></span>
+                        <label asp-for="CreateTournamentDTO.SelectedTime"></label>
+                        <input asp-for="CreateTournamentDTO.SelectedTime" type="time" class="form-control" />
+                        <span asp-validation-for="CreateTournamentDTO.SelectedTime"></span>
                     </div>
 
                     <div class="form-group">
-                        <label asp-for="Tournament.Format"></label>
-                        <select asp-for="Tournament.Format" class="form-control">
+                        <label asp-for="CreateTournamentDTO.Format"></label>
+                        <select asp-for="CreateTournamentDTO.Format" class="form-control">
                             <option value="">Select format</option>
                             <option>1v1</option>
                             <option>2v2</option>
@@ -56,14 +56,26 @@
                     </div>
 
                     <div class="form-group">
-                        <label asp-for="Tournament.MaxTeams"></label>
-                        <select asp-for="Tournament.MaxTeams" class="form-control">
+                        <label asp-for="CreateTournamentDTO.MaxTeams"></label>
+                        <select asp-for="CreateTournamentDTO.MaxTeams" class="form-control">
                             <option value="">Select max teams</option>
                             <option>8</option>
                             <option>16</option>
                             <option>32</option>
                             <option>64</option>
                         </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="CreateTournamentDTO.PrizeMoney"></label>
+                        <input asp-for="CreateTournamentDTO.PrizeMoney" type="number" min="0" step="0.01" class="form-control" />
+                        <span asp-validation-for="CreateTournamentDTO.PrizeMoney"></span>
+                    </div>
+
+                    <div class="form-group form-group-full">
+                        <label asp-for="CreateTournamentDTO.Description"></label>
+                        <textarea asp-for="CreateTournamentDTO.Description" class="form-control"></textarea>
+                        <span asp-validation-for="CreateTournamentDTO.Description"></span>
                     </div>
 
                 </div>

@@ -1,0 +1,140 @@
+@page "/my-tournaments"
+@model ScrimManagerPresentation.Pages.Presentation.Tournament.MyTournamentsModel
+
+@{
+    ViewData["Title"] = "My Tournaments";
+}
+
+<style>
+    .my-tournaments-page {
+        max-width: 1100px;
+        margin: 30px auto;
+    }
+
+    .my-tournaments-header {
+        margin-bottom: 24px;
+        color: white;
+    }
+
+    .my-tournaments-header h1 {
+        margin-bottom: 6px;
+        font-size: 36px;
+        font-weight: 900;
+    }
+
+    .my-tournaments-header p {
+        color: #bfdbfe;
+    }
+
+    .my-tournament-list {
+        display: grid;
+        gap: 14px;
+    }
+
+    .my-tournament-card {
+        display: grid;
+        grid-template-columns: minmax(220px, 1.4fr) 120px 190px 130px auto;
+        align-items: center;
+        gap: 18px;
+        padding: 20px;
+        border: 1px solid rgba(255,255,255,.12);
+        border-radius: 14px;
+        background: #102c43;
+        color: white;
+    }
+
+    .my-tournament-name {
+        font-size: 20px;
+        font-weight: 900;
+    }
+
+    .my-tournament-team {
+        margin-top: 4px;
+        color: #93c5fd;
+        font-size: 14px;
+    }
+
+    .my-tournament-label {
+        display: block;
+        margin-bottom: 4px;
+        color: #93c5fd;
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+    }
+
+    .my-tournament-link {
+        padding: 10px 14px;
+        border-radius: 9px;
+        background: #2563eb;
+        color: white;
+        font-weight: 800;
+        text-align: center;
+        text-decoration: none;
+    }
+
+    @@media (max-width: 850px) {
+        .my-tournament-card {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .my-tournament-main,
+        .my-tournament-link {
+            grid-column: 1 / -1;
+        }
+    }
+</style>
+
+<div class="my-tournaments-page">
+    <div class="my-tournaments-header">
+        <h1>My Tournaments</h1>
+        <p>Tournaments you joined or accepted as a selected player.</p>
+    </div>
+
+    @if (!Model.Tournaments.Any())
+    {
+        <div class="requests-empty">
+            <h2>No tournaments yet</h2>
+            <p>Accepted tournament invitations will appear here.</p>
+        </div>
+    }
+    else
+    {
+        <div class="my-tournament-list">
+            @foreach (var tournament in Model.Tournaments)
+            {
+                <article class="my-tournament-card">
+                    <div class="my-tournament-main">
+                        <div class="my-tournament-name">@tournament.TournamentName</div>
+                        <div class="my-tournament-team">
+                            @(string.IsNullOrWhiteSpace(tournament.TeamName)
+                                ? "Solo participation"
+                                : tournament.TeamName)
+                        </div>
+                    </div>
+
+                    <div>
+                        <span class="my-tournament-label">Format</span>
+                        @tournament.Format
+                    </div>
+
+                    <div>
+                        <span class="my-tournament-label">Starts</span>
+                        @tournament.StartDate.ToString("dd-MM-yyyy HH:mm")
+                    </div>
+
+                    <div>
+                        <span class="my-tournament-label">Teams</span>
+                        @tournament.ParticipatingTeams / @tournament.MaxTeams
+                    </div>
+
+                    <a asp-page="/Presentation/Tournament/TournamentDetails"
+                       asp-route-id="@tournament.TournamentId"
+                       class="my-tournament-link">
+                        Details
+                    </a>
+                </article>
+            }
+        </div>
+    }
+</div>

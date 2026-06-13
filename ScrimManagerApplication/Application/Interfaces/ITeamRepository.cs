@@ -21,9 +21,9 @@ namespace ScrimManagerApplication.Application.Interfaces
 
         List<TeamJoinRequest> GetPendingRequestsForCaptain(int captainUserId);
 
-        int? AcceptJoinRequest(int requestId);
+        int? AcceptJoinRequest(int requestId, int captainUserId);
 
-        void DeclineJoinRequest(int requestId);
+        void DeclineJoinRequest(int requestId, int captainUserId);
 
         void UpdateTeamRank(int teamId, Rank rank);
     }

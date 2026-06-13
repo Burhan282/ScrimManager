@@ -143,6 +143,10 @@
         background: #e11d48;
     }
 
+    .status-full {
+        background: #dc2626;
+    }
+
     .card-content {
         padding: 14px 16px 16px;
     }
@@ -390,7 +394,8 @@
     }
 
     .btn-save,
-    .btn-join {
+    .btn-join,
+    .btn-details {
         background: #1da1f2;
         color: white;
         padding: 11px 16px;
@@ -402,6 +407,16 @@
 
     .btn-join {
         background: #16a34a;
+    }
+
+    .btn-details {
+        background: #0d3b5f;
+    }
+
+    .btn-join:disabled {
+        background: #dc2626;
+        cursor: not-allowed;
+        opacity: 0.9;
     }
 
     .btn-cancel {
@@ -476,9 +491,14 @@
             string imagePath = "/images/default.png";
             string subtitle = item.Organisator ?? "";
             double daysUntilStart = (item.Datum - DateTime.UtcNow).TotalDays;
+            bool isFull = item.ParticipatingTeams >= item.MaxTeams;
             bool closesSoon = item.Status == "Open" && daysUntilStart >= 0 && daysUntilStart <= 7;
-            string badgeText = closesSoon ? "Registration Closes Soon" : (item.Status == "Open" ? "Registration Open" : item.Status);
-            string badgeClass = closesSoon ? "status-closing" : "status-open";
+            string badgeText = isFull
+                ? "Tournament Full"
+                : closesSoon
+                    ? "Registration Closes Soon"
+                    : (item.Status == "Open" ? "Registration Open" : item.Status);
+            string badgeClass = isFull ? "status-full" : (closesSoon ? "status-closing" : "status-open");
 
             if (item.Format == "1v1")
             {
@@ -505,6 +525,7 @@
                  data-prizemoney="@(item.PrizeMoney?.ToString("0.##") ?? "0")"
                  data-description="@(item.Description ?? "No description available.")"
                  data-status="@badgeText"
+                 data-full="@isFull.ToString().ToLowerInvariant()"
                  onclick="openTournamentDetails(this)">
                 <div class="card-image-wrapper">
                     <img src="@imagePath" alt="@item.Format" />
@@ -554,27 +575,27 @@
                 <div class="form-grid">
                     <div class="form-group form-group-full">
                         <label for="Tournament_Naam">Name</label>
-                        <input id="Tournament_Naam" name="Tournament.Naam" placeholder="Example: Scrim Manager Summer Cup" />
+                        <input id="Tournament_Naam" name="CreateTournamentDTO.Naam" placeholder="Example: Scrim Manager Summer Cup" />
                     </div>
 
                     <div class="form-group form-group-full">
                         <label for="Tournament_Organisator">Organizer</label>
-                        <input id="Tournament_Organisator" name="Tournament.Organisator" placeholder="Example: Burhan" />
+                        <input id="Tournament_Organisator" name="CreateTournamentDTO.Organisator" placeholder="Example: Burhan" />
                     </div>
 
                     <div class="form-group">
                         <label for="SelectedDate">Start Date</label>
-                        <input id="SelectedDate" name="SelectedDate" type="date" />
+                        <input id="SelectedDate" name="CreateTournamentDTO.SelectedDate" type="date" />
                     </div>
 
                     <div class="form-group">
                         <label for="SelectedTime">Start Time</label>
-                        <input id="SelectedTime" name="SelectedTime" type="time" />
+                        <input id="SelectedTime" name="CreateTournamentDTO.SelectedTime" type="time" />
                     </div>
 
                     <div class="form-group">
                         <label for="Tournament_Format">Format</label>
-                        <select id="Tournament_Format" name="Tournament.Format">
+                        <select id="Tournament_Format" name="CreateTournamentDTO.Format">
                             <option value="">-- Select format --</option>
                             <option value="1v1">1v1</option>
                             <option value="2v2">2v2</option>
@@ -584,7 +605,7 @@
 
                     <div class="form-group">
                         <label for="Tournament_MaxTeams">Max Teams</label>
-                        <select id="Tournament_MaxTeams" name="Tournament.MaxTeams">
+                        <select id="Tournament_MaxTeams" name="CreateTournamentDTO.MaxTeams">
                             <option value="">-- Select max teams --</option>
                             <option value="8">8</option>
                             <option value="16">16</option>
@@ -597,18 +618,13 @@
                         <label for="Tournament_PrizeMoney">Prize Money</label>
                         <div class="price-input-wrapper">
                             <span class="price-currency">€</span>
-                            <input id="Tournament_PrizeMoney" name="Tournament.PrizeMoney" type="number" step="0.01" min="0" placeholder="250" />
+                            <input id="Tournament_PrizeMoney" name="CreateTournamentDTO.PrizeMoney" type="number" step="0.01" min="0" placeholder="250" />
                         </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="Tournament_ParticipatingTeams">Participating Teams</label>
-                        <input id="Tournament_ParticipatingTeams" name="Tournament.ParticipatingTeams" type="number" min="0" placeholder="Example: 8" />
                     </div>
 
                     <div class="form-group form-group-full">
                         <label for="Tournament_Description">Description</label>
-                        <textarea id="Tournament_Description" name="Tournament.Description" placeholder="Write more details about the tournament..."></textarea>
+                        <textarea id="Tournament_Description" name="CreateTournamentDTO.Description" placeholder="Write more details about the tournament..."></textarea>
                     </div>
                 </div>
 
@@ -627,6 +643,8 @@
 
 <div id="detailsModal" class="modal-overlay" onclick="closeDetailsModalOutside(event)">
     <div class="details-modal-card">
+        <input type="hidden" id="joinTournamentId" />
+
         <div class="modal-header">
             <div>
                 <h2 id="detailsTitle">Tournament Details</h2>
@@ -673,13 +691,19 @@
                 <p id="detailsDescription"></p>
             </div>
 
-            <form method="post" asp-page-handler="Join">
-                <input type="hidden" id="joinTournamentId" name="tournamentId" />
-                <div class="modal-actions">
-                    <button type="submit" class="btn-join">Join Tournament</button>
-                    <button type="button" class="btn-cancel" onclick="closeTournamentDetails()">Close</button>
-                </div>
-            </form>
+            <div class="modal-actions">
+                <button type="button" class="btn-details" onclick="goToDetails()">
+                    Tournament Details
+                </button>
+
+                <button type="button" class="btn-join" id="detailsJoinButton" onclick="goToJoin()">
+                    Join Tournament
+                </button>
+
+                <button type="button" class="btn-cancel" onclick="closeTournamentDetails()">
+                    Close
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -713,6 +737,11 @@
         document.getElementById("detailsPrizeMoney").textContent = "€" + (card.dataset.prizemoney || "0");
         document.getElementById("detailsDescription").textContent = card.dataset.description || "";
         document.getElementById("joinTournamentId").value = card.dataset.id || "";
+
+        const joinButton = document.getElementById("detailsJoinButton");
+        const isFull = card.dataset.full === "true";
+        joinButton.disabled = isFull;
+        joinButton.textContent = isFull ? "Tournament Full" : "Join Tournament";
 
         document.getElementById("detailsModal").classList.add("show");
         document.body.style.overflow = "hidden";
@@ -763,4 +792,25 @@
             closeTournamentDetails();
         }
     });
+    function goToJoin() {
+        const id = document.getElementById("joinTournamentId").value;
+
+        if (!id) {
+            alert("No tournament selected");
+            return;
+        }
+
+        window.location.href = "/tournaments/Join/" + encodeURIComponent(id);
+    }
+
+    function goToDetails() {
+        const id = document.getElementById("joinTournamentId").value;
+
+        if (!id) {
+            alert("No tournament selected");
+            return;
+        }
+
+        window.location.href = "/tournaments/details/" + encodeURIComponent(id);
+    }
 </script>

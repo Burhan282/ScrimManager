@@ -1,8 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ScrimManagerApplication.Application;
-using System;
-using TournamentModel = ScrimManagerApplication.Application.Models.Tournament;
+using ScrimManagerApplication.Application.Models.DTOModels;
 
 namespace ScrimManagerPresentation.Pages.Presentation.Tournament
 {
@@ -16,29 +15,19 @@ namespace ScrimManagerPresentation.Pages.Presentation.Tournament
         }
 
         [BindProperty]
-        public TournamentModel Tournament { get; set; } = new TournamentModel();
-
-        [BindProperty]
-        public DateTime? SelectedDate { get; set; }
-
-        [BindProperty]
-        public TimeSpan? SelectedTime { get; set; }
+        public CreateTournamentDTO CreateTournamentDTO { get; set; } = new();
 
         public IActionResult OnPost()
         {
-            if (!SelectedDate.HasValue || !SelectedTime.HasValue)
+            if (!ModelState.IsValid)
             {
-                TempData["ToastMessage"] = "Select a valid date and time.";
+                TempData["ToastMessage"] = "Complete all required tournament fields.";
                 TempData["ToastType"] = "failed";
 
                 return Page();
             }
 
-            _tournamentService.CreateTournament(
-                Tournament,
-                SelectedDate.Value,
-                SelectedTime.Value
-            );
+            _tournamentService.CreateTournament(CreateTournamentDTO);
 
             TempData["ToastMessage"] = "Tournament created successfully.";
             TempData["ToastType"] = "success";

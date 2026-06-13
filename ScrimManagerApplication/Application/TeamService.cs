@@ -74,9 +74,9 @@ namespace ScrimManagerApplication.Application
             return _teamRepository.GetPendingRequestsForCaptain(captainUserId);
         }
 
-        public void AcceptJoinRequest(int requestId)
+        public void AcceptJoinRequest(int requestId, int captainUserId)
         {
-            int? teamId = _teamRepository.AcceptJoinRequest(requestId);
+            int? teamId = _teamRepository.AcceptJoinRequest(requestId, captainUserId);
 
             if (teamId == null)
             {
@@ -86,9 +86,9 @@ namespace ScrimManagerApplication.Application
             RecalculateTeamRank(teamId.Value);
         }
 
-        public void DeclineJoinRequest(int requestId)
+        public void DeclineJoinRequest(int requestId, int captainUserId)
         {
-            _teamRepository.DeclineJoinRequest(requestId);
+            _teamRepository.DeclineJoinRequest(requestId, captainUserId);
         }
 
         private void RecalculateTeamRank(int teamId)

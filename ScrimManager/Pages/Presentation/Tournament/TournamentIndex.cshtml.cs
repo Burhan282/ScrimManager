@@ -23,9 +23,20 @@ namespace ScrimManager.Pages.Tournaments
 
         public IActionResult OnPostJoin(int tournamentId)
         {
-            _tournamentService.JoinTournament(tournamentId);
+            var userId = HttpContext.Session.GetInt32("UserId");
 
-            return Redirect("/tournaments");
+            if (userId == null)
+                return RedirectToPage("/Presentation/Account/Login");
+
+            _tournamentService.JoinTournament( 
+                tournamentId,
+                null,
+                userId,
+                null,
+                new List<int>()
+            );
+
+            return RedirectToPage("/Presentation/Tournament/TournamentIndex");
         }
     }
 }

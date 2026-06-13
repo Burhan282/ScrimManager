@@ -1,0 +1,159 @@
+﻿@page "/tournaments/Join/{id:int}"
+@model ScrimManagerPresentation.Pages.Presentation.Tournament.JoinTournamentModel
+
+@{
+    ViewData["Title"] = "Join Tournament";
+
+    bool isFull = Model.Tournament != null
+        && Model.Tournament.ParticipatingTeams >= Model.Tournament.MaxTeams;
+
+    int requiredPlayers = Model.Tournament?.Format switch
+    {
+        "2v2" => 2,
+        "3v3" => 3,
+        _ => 1
+    };
+}
+
+<div class="join-tournament-page">
+
+    <a asp-page="/Presentation/Tournament/TournamentIndex" class="team-profile-back">
+        ← Back to Tournaments
+    </a>
+
+    <div class="join-tournament-card">
+
+        <h1>Join Tournament</h1>
+
+        @if (Model.Tournament == null)
+        {
+            <p>Tournament not found.</p>
+        }
+        else
+        {
+            <div class="join-tournament-info">
+                <h2>@Model.Tournament.Naam</h2>
+                <p><strong>Format:</strong> @Model.Tournament.Format</p>
+                <p><strong>Registered:</strong> @Model.Tournament.ParticipatingTeams / @Model.Tournament.MaxTeams</p>
+            </div>
+
+            @if (isFull)
+            {
+                <div class="tournament-full-message">
+                    Tournament Full
+                </div>
+            }
+            else
+            {
+                <form method="post" id="joinTournamentForm">
+
+                    <input type="hidden" asp-for="Id" />
+                    <div asp-validation-summary="All" class="join-validation"></div>
+
+                    @if (Model.Tournament.Format == "1v1")
+                    {
+                        <div class="form-group">
+                            <label>Entry Name</label>
+                            <input asp-for="JoinRequest.EntryName"
+                                   class="form-control"
+                                   placeholder="Leave empty to use username" />
+                        </div>
+
+                        <p class="join-help-text">
+                            You will join this tournament as a solo player.
+                        </p>
+                    }
+                    else if (!Model.UserTeams.Any())
+                    {
+                        <div class="join-validation">
+                            You have no teams that you created. Create a team before joining this tournament.
+                        </div>
+                    }
+                    else
+                    {
+                        <h3>Select Your Team</h3>
+                        <div class="team-choice-list">
+                            @foreach (var team in Model.UserTeams)
+                            {
+                                <label class="team-choice">
+                                    <input type="radio"
+                                           asp-for="JoinRequest.TeamId"
+                                           value="@team.Id"
+                                           onchange="showTeamMembers(@team.Id)" />
+                                    <span>
+                                        <strong>@team.Name</strong>
+                                        <small>@Model.TeamMembers[team.Id].Count members</small>
+                                    </span>
+                                </label>
+                            }
+                        </div>
+
+                        <h3>Select @requiredPlayers Players</h3>
+                        @foreach (var team in Model.UserTeams)
+                        {
+                            <div class="team-members"
+                                 id="team-members-@team.Id"
+                                 data-team-id="@team.Id">
+                                @foreach (var member in Model.TeamMembers[team.Id])
+                                {
+                                    <label class="player-choice">
+                                        <input type="checkbox"
+                                               name="JoinRequest.PlayerIds"
+                                               value="@member.Id"
+                                               checked="@Model.JoinRequest.PlayerIds.Contains(member.Id)" />
+                                        <span>@member.Username</span>
+                                    </label>
+                                }
+                            </div>
+                        }
+
+                        <p class="join-help-text">
+                            Choose exactly @requiredPlayers players from the selected team.
+                        </p>
+                    }
+
+                    @if (Model.Tournament.Format == "1v1" || Model.UserTeams.Any())
+                    {
+                        <button type="submit" class="btn-create-team">
+                            Join Tournament
+                        </button>
+                    }
+
+                </form>
+            }
+        }
+    </div>
+</div>
+
+<script>
+    const requiredPlayers = @requiredPlayers;
+
+    function showTeamMembers(teamId) {
+        document.querySelectorAll(".team-members").forEach(group => {
+            const selected = group.dataset.teamId === String(teamId);
+            group.classList.toggle("show", selected);
+
+            if (!selected) {
+                group.querySelectorAll("input[type='checkbox']").forEach(input => {
+                    input.checked = false;
+                });
+            }
+        });
+    }
+
+    document.querySelectorAll(".team-members input[type='checkbox']").forEach(input => {
+        input.addEventListener("change", function () {
+            const group = this.closest(".team-members");
+            const selected = group.querySelectorAll("input[type='checkbox']:checked");
+
+            if (selected.length > requiredPlayers) {
+                this.checked = false;
+            }
+        });
+    });
+
+    const selectedTeam = document.querySelector("input[name='JoinRequest.TeamId']:checked");
+    if (selectedTeam) {
+        showTeamMembers(selectedTeam.value);
+    }
+</script>
