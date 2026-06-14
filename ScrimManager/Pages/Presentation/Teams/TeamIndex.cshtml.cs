@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ScrimManagerApplication.Application;
+using ScrimManagerApplication.Application.Models;
 
-namespace ScrimManagerPresentation.Pages.Presentation.Team
+namespace ScrimManagerPresentation.Pages.Presentation.Teams
 {
     public class TeamIndexModel : PageModel
     {
@@ -12,7 +13,7 @@ namespace ScrimManagerPresentation.Pages.Presentation.Team
             _teamService = teamService;
         }
 
-        public List<ScrimManagerApplication.Application.Models.Team> Teams { get; set; } = new();
+        public List<Team> Teams { get; set; } = new();
 
         public void OnGet()
         {

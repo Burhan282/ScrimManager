@@ -1,5 +1,5 @@
 ﻿@page
-@model ScrimManagerPresentation.Pages.Presentation.Team.MyTeamModel
+@model ScrimManagerPresentation.Pages.Presentation.Teams.MyTeamModel
 
 <div class="my-teams-page">
 
@@ -59,7 +59,7 @@
                                 : team.Description)
                         </p>
 
-                        <a asp-page="/Presentation/Team/TeamDetails"
+                        <a asp-page="/Presentation/Teams/TeamDetails"
                            asp-route-id="@team.Id"
                            class="my-team-btn">
                             View Team

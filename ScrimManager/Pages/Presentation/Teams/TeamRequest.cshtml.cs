@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using ScrimManagerApplication.Application;
 using ScrimManagerApplication.Application.Models;
 
-namespace ScrimManagerPresentation.Pages.Presentation.Team
+namespace ScrimManagerPresentation.Pages.Presentation.Teams
 {
     public class TeamRequestModel : PageModel
     {

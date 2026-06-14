@@ -6,7 +6,7 @@ using ScrimManagerApplication.Application.Models;
 using System.Collections.Generic;
 using TeamModel = ScrimManagerApplication.Application.Models.Team;
 
-namespace ScrimManagerPresentation.Pages.Presentation.Team
+namespace ScrimManagerPresentation.Pages.Presentation.Teams
 {
     public class TeamDetailsModel : PageModel
     {
@@ -52,7 +52,7 @@ namespace ScrimManagerPresentation.Pages.Presentation.Team
             TempData["ToastMessage"] = "Request sent. Waiting for captain approval.";
             TempData["ToastType"] = "pending";
 
-            return RedirectToPage("/Presentation/Team/TeamDetails", new { id });
+            return RedirectToPage("/Presentation/Teams/TeamDetails", new { id });
         }
     }
 }

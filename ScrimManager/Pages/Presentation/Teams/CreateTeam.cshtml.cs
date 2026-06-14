@@ -6,7 +6,7 @@ using ScrimManagerApplication.Application.Models.DTOModels;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace ScrimManagerPresentation.Pages.Presentation.Team
+namespace ScrimManagerPresentation.Pages.Presentation.Teams
 {
     public class CreateTeamModel : PageModel
     {
@@ -55,7 +55,7 @@ namespace ScrimManagerPresentation.Pages.Presentation.Team
             TempData["ToastMessage"] = "Team created successfully.";
             TempData["ToastType"] = "success";
 
-            return RedirectToPage("/Presentation/Team/TeamIndex");
+            return RedirectToPage("/Presentation/Teams/TeamIndex");
         }
     }
 }

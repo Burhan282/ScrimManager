@@ -5,7 +5,7 @@ using ScrimManagerApplication.Application;
 using TeamModel = ScrimManagerApplication.Application.Models.Team;
 using System.Collections.Generic;
 
-namespace ScrimManagerPresentation.Pages.Presentation.Team
+namespace ScrimManagerPresentation.Pages.Presentation.Teams
 {
     public class MyTeamModel : PageModel
     {
