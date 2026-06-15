@@ -1,5 +1,6 @@
 ﻿using ScrimManagerApplication.Application;
 using ScrimManagerApplication.Application.Models;
+using ScrimManagerApplication.Application.Models.DTOModels;
 using ScrimManagerDataAcces.DataAcces.FakeDataBases;
 
 namespace ScrimManagerTests
@@ -15,12 +16,7 @@ namespace ScrimManagerTests
             AuthService authService = new AuthService(fakeRepository);
 
             // Act
-            authService.Register(
-                "Burhan",
-                "burhan@mail.com",
-                "1234",
-                "Player",
-                Rank.GoldIII);
+            authService.Register(CreateUser());
 
            
             List<User> users = fakeRepository.GetAll();
@@ -36,12 +32,7 @@ namespace ScrimManagerTests
             FakeUserRepository fakeRepository = new FakeUserRepository();
             AuthService authService = new AuthService(fakeRepository);
 
-            authService.Register(
-                "Burhan",
-                "burhan@mail.com",
-                "1234",
-                "Player",
-                Rank.GoldIII);
+            authService.Register(CreateUser());
 
            
             User? user = authService.Login(
@@ -60,18 +51,25 @@ namespace ScrimManagerTests
             FakeUserRepository fakeRepository = new FakeUserRepository();
             AuthService authService = new AuthService(fakeRepository);
 
-            authService.Register(
-                "Burhan",
-                "burhan@mail.com",
-                "1234",
-                "Player",
-                Rank.GoldIII);
+            authService.Register(CreateUser());
 
             User? user = authService.Login(
                 "burhan@mail.com",
                 "wrongpassword");
 
             Assert.IsNull(user);
+        }
+
+        private static CreateUserDTO CreateUser()
+        {
+            return new CreateUserDTO
+            {
+                Username = "Burhan",
+                Email = "burhan@mail.com",
+                PasswordHash = "1234",
+                UserRole = Role.Player,
+                UserRank = Rank.GoldIII
+            };
         }
     }
 }

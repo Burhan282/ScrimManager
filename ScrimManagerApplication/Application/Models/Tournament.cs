@@ -12,5 +12,16 @@
         public string? Description { get; set; }
         public decimal? PrizeMoney { get; set; }
         public int ParticipatingTeams { get; set; }
+
+        public bool IsFull => ParticipatingTeams >= MaxTeams;
+
+        public bool IsSolo => Format == "1v1";
+
+        public int RequiredPlayers => Format switch
+        {
+            "3v3" => 3,
+            "2v2" => 2,
+            _ => 1
+        };
     }
 }

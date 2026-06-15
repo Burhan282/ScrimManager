@@ -4,15 +4,8 @@
 @{
     ViewData["Title"] = "Join Tournament";
 
-    bool isFull = Model.Tournament != null
-        && Model.Tournament.ParticipatingTeams >= Model.Tournament.MaxTeams;
-
-    int requiredPlayers = Model.Tournament?.Format switch
-    {
-        "2v2" => 2,
-        "3v3" => 3,
-        _ => 1
-    };
+    bool isFull = Model.Tournament?.IsFull == true;
+    int requiredPlayers = Model.Tournament?.RequiredPlayers ?? 1;
 }
 
 <div class="join-tournament-page">
@@ -50,7 +43,7 @@
                     <input type="hidden" asp-for="Id" />
                     <div asp-validation-summary="All" class="join-validation"></div>
 
-                    @if (Model.Tournament.Format == "1v1")
+                    @if (Model.Tournament.IsSolo)
                     {
                         <div class="form-group">
                             <label>Entry Name</label>
@@ -112,7 +105,7 @@
                         </p>
                     }
 
-                    @if (Model.Tournament.Format == "1v1" || Model.UserTeams.Any())
+                    @if (Model.Tournament.IsSolo || Model.UserTeams.Any())
                     {
                         <button type="submit" class="btn-create-team">
                             Join Tournament

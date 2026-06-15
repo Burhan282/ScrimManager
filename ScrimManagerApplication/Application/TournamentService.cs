@@ -7,10 +7,14 @@ namespace ScrimManagerApplication.Application
     public class TournamentService
     {
         private readonly ITournamentRepository _tournamentRepository;
+        private readonly ITeamRepository _teamRepository;
 
-        public TournamentService(ITournamentRepository tournamentRepository)
+        public TournamentService(
+            ITournamentRepository tournamentRepository,
+            ITeamRepository teamRepository)
         {
             _tournamentRepository = tournamentRepository;
+            _teamRepository = teamRepository;
         }
 
         public void CreateTournament(CreateTournamentDTO dto)
@@ -74,33 +78,54 @@ namespace ScrimManagerApplication.Application
             return _tournamentRepository.GetTournamentsByUserId(userId);
         }
 
-        public bool JoinTournament(
-            int tournamentId,
-            int? teamId,
-            int? userId,
-            string? entryName,
-            List<int>? playerIds = null)
+        public string? JoinTournament(JoinTournamentRequestDTO request, int userId)
         {
-            var tournament = _tournamentRepository.FindById(tournamentId);
+            var tournament = _tournamentRepository.FindById(request.TournamentId);
 
             if (tournament == null)
-                return false;
+                return "Tournament not found.";
 
-            if (tournament.ParticipatingTeams >= tournament.MaxTeams)
-                return false;
+            if (tournament.IsFull)
+                return "This tournament is full.";
+
+            if (tournament.IsSolo)
+            {
+                request.TeamId = null;
+                request.PlayerIds = new List<int> { userId };
+            }
+            else
+            {
+                var selectedTeam = _teamRepository.FindById(request.TeamId ?? 0);
+
+                if (selectedTeam == null || selectedTeam.CreatedByUserId != userId)
+                    return "Select a team that you created.";
+
+                var selectedPlayerIds = request.PlayerIds.Distinct().ToList();
+                var memberIds = _teamRepository.GetTeamMembers(selectedTeam.Id)
+                    .Select(member => member.Id)
+                    .ToHashSet();
+
+                if (selectedPlayerIds.Count != tournament.RequiredPlayers)
+                    return $"Select exactly {tournament.RequiredPlayers} players.";
+
+                if (selectedPlayerIds.Any(playerId => !memberIds.Contains(playerId)))
+                    return "Every selected player must belong to the selected team.";
+
+                request.PlayerIds = selectedPlayerIds;
+            }
 
             _tournamentRepository.JoinTournament(
-                tournamentId,
-                teamId,
+                request.TournamentId,
+                request.TeamId,
                 userId,
-                entryName,
-                playerIds ?? new List<int>()
+                request.EntryName,
+                request.PlayerIds
             );
 
             tournament.ParticipatingTeams++;
 
             _tournamentRepository.Update(tournament);
-            return true;
+            return null;
         }
     }
 }

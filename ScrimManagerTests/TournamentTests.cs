@@ -16,7 +16,7 @@ namespace ScrimManagerTests
                 new FakeTournamentRepository();
 
             TournamentService service =
-                new TournamentService(fakeRepository);
+                new TournamentService(fakeRepository, null!);
 
             CreateTournamentDTO tournament = new CreateTournamentDTO
             {

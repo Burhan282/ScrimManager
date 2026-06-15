@@ -6,6 +6,6 @@ namespace ScrimManagerApplication.Application.Interfaces
     {
         void Add(User user);
         User? GetById(int id);
-        User? GetByEmailAndPassword(string email, string password);
+        User? GetByEmail(string email);
     }
 }

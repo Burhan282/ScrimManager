@@ -59,6 +59,13 @@ namespace ScrimManagerApplication.Application
             return _teamRepository.GetTeamsByUserId(userId);
         }
 
+        public List<Team> GetTeamsCreatedByUser(int userId)
+        {
+            return _teamRepository.GetTeamsByUserId(userId)
+                .Where(team => team.CreatedByUserId == userId)
+                .ToList();
+        }
+
         public List<User> GetTeamMembers(int teamId)
         {
             return _teamRepository.GetTeamMembers(teamId);

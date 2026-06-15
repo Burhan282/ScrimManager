@@ -35,19 +35,16 @@ namespace ScrimManagerApplication.Application
         
         public User? Login(string email, string password)
         {
-            var user = _userRepository.GetByEmailAndPassword(email, password);
+            var user = _userRepository.GetByEmail(email);
 
-            
-            if (user != null)
+            if (user?.PasswordHash == password)
             {
                 System.Diagnostics.Debug.WriteLine($"LOGIN OK - USER ID: {user.Id}");
-            }
-            else
-            {
-                System.Diagnostics.Debug.WriteLine("LOGIN FAILED");
+                return user;
             }
 
-            return user;
+            System.Diagnostics.Debug.WriteLine("LOGIN FAILED");
+            return null;
         }
     }
 }

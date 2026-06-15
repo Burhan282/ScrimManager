@@ -57,40 +57,7 @@ namespace ScrimManagerPresentation.Pages.Presentation.Tournament
             if (Tournament == null)
                 return RedirectToPage("/Presentation/Tournament/TournamentIndex");
 
-            if (Tournament.ParticipatingTeams >= Tournament.MaxTeams)
-            {
-                ModelState.AddModelError(string.Empty, "This tournament is full.");
-                LoadUserTeams();
-                return Page();
-            }
-
             JoinRequest.TournamentId = Id;
-
-            if (Tournament.Format == "1v1")
-            {
-                JoinRequest.TeamId = null;
-                JoinRequest.PlayerIds = new List<int> { userId.Value };
-            }
-            else
-            {
-                int requiredPlayers = Tournament.Format == "3v3" ? 3 : 2;
-                TeamModel? selectedTeam = _teamService.GetTeamById(JoinRequest.TeamId ?? 0);
-
-                if (selectedTeam == null || selectedTeam.CreatedByUserId != userId.Value)
-                    ModelState.AddModelError(string.Empty, "Select a team that you created.");
-
-                List<int> memberIds = selectedTeam == null
-                    ? new List<int>()
-                    : _teamService.GetTeamMembers(selectedTeam.Id).Select(member => member.Id).ToList();
-
-                JoinRequest.PlayerIds = JoinRequest.PlayerIds.Distinct().ToList();
-
-                if (JoinRequest.PlayerIds.Count != requiredPlayers)
-                    ModelState.AddModelError(string.Empty, $"Select exactly {requiredPlayers} players.");
-
-                if (JoinRequest.PlayerIds.Any(playerId => !memberIds.Contains(playerId)))
-                    ModelState.AddModelError(string.Empty, "Every selected player must belong to the selected team.");
-            }
 
             if (!ModelState.IsValid)
             {
@@ -98,17 +65,11 @@ namespace ScrimManagerPresentation.Pages.Presentation.Tournament
                 return Page();
             }
 
-            bool joined = _tournamentService.JoinTournament(
-                JoinRequest.TournamentId,
-                JoinRequest.TeamId,
-                userId,
-                JoinRequest.EntryName,
-                JoinRequest.PlayerIds
-            );
+            string? error = _tournamentService.JoinTournament(JoinRequest, userId.Value);
 
-            if (!joined)
+            if (error != null)
             {
-                ModelState.AddModelError(string.Empty, "The tournament could not be joined.");
+                ModelState.AddModelError(string.Empty, error);
                 LoadUserTeams();
                 return Page();
             }
@@ -120,12 +81,10 @@ namespace ScrimManagerPresentation.Pages.Presentation.Tournament
         {
             int? userId = HttpContext.Session.GetInt32("UserId");
 
-            if (userId == null || Tournament?.Format == "1v1")
+            if (userId == null || Tournament?.IsSolo != false)
                 return;
 
-            UserTeams = _teamService.GetTeamsByUserId(userId.Value)
-                .Where(team => team.CreatedByUserId == userId.Value)
-                .ToList();
+            UserTeams = _teamService.GetTeamsCreatedByUser(userId.Value);
 
             TeamMembers = UserTeams.ToDictionary(
                 team => team.Id,

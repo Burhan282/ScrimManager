@@ -491,7 +491,7 @@
             string imagePath = "/images/default.png";
             string subtitle = item.Organisator ?? "";
             double daysUntilStart = (item.Datum - DateTime.UtcNow).TotalDays;
-            bool isFull = item.ParticipatingTeams >= item.MaxTeams;
+            bool isFull = item.IsFull;
             bool closesSoon = item.Status == "Open" && daysUntilStart >= 0 && daysUntilStart <= 7;
             string badgeText = isFull
                 ? "Tournament Full"

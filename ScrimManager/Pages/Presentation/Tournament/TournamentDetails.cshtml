@@ -3,8 +3,7 @@
 
 @{
     ViewData["Title"] = "Tournament Details";
-    bool isFull = Model.Tournament != null
-        && Model.Tournament.ParticipatingTeams >= Model.Tournament.MaxTeams;
+    bool isFull = Model.Tournament?.IsFull == true;
 }
 
 <style>

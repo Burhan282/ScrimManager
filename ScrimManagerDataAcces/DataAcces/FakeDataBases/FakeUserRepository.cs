@@ -14,11 +14,9 @@ namespace ScrimManagerDataAcces.DataAcces.FakeDataBases
             users.Add(user);
         }
 
-        public User? GetByEmailAndPassword(string email, string password)
+        public User? GetByEmail(string email)
         {
-            return users.FirstOrDefault(u =>
-                u.Email == email &&
-                u.PasswordHash == password);
+            return users.FirstOrDefault(u => u.Email == email);
         }
 
         public User? GetById(int id)

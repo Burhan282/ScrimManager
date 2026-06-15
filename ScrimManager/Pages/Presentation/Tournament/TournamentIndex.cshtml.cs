@@ -28,13 +28,9 @@ namespace ScrimManager.Pages.Tournaments
             if (userId == null)
                 return RedirectToPage("/Presentation/Account/Login");
 
-            _tournamentService.JoinTournament( 
-                tournamentId,
-                null,
-                userId,
-                null,
-                new List<int>()
-            );
+            _tournamentService.JoinTournament(
+                new JoinTournamentRequestDTO { TournamentId = tournamentId },
+                userId.Value);
 
             return RedirectToPage("/Presentation/Tournament/TournamentIndex");
         }

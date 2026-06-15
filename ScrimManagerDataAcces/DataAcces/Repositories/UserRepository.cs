@@ -40,7 +40,7 @@ namespace ScrimManagerDataAccess
             cmd.ExecuteNonQuery();
         }
 
-        public User? GetByEmailAndPassword(string email, string password)
+        public User? GetByEmail(string email)
         {
             using var conn = new NpgsqlConnection(connectionString);
             conn.Open();
@@ -62,14 +62,7 @@ namespace ScrimManagerDataAccess
                 return null;
             }
 
-            string dbPassword = reader["password_hash"]?.ToString() ?? "";
-
-            if (dbPassword != password)
-            {
-                return null;
-            }
-
-            return MapUser(reader, dbPassword);
+            return MapUser(reader);
         }
 
         public User? GetById(int id)
@@ -94,19 +87,17 @@ namespace ScrimManagerDataAccess
                 return null;
             }
 
-            string dbPassword = reader["password_hash"]?.ToString() ?? "";
-
-            return MapUser(reader, dbPassword);
+            return MapUser(reader);
         }
 
-        private User MapUser(NpgsqlDataReader reader, string dbPassword)
+        private User MapUser(NpgsqlDataReader reader)
         {
             return new User
             {
                 Id = Convert.ToInt32(reader["id"]),
                 Username = reader["username"]?.ToString() ?? "",
                 Email = reader["email"]?.ToString() ?? "",
-                PasswordHash = dbPassword,
+                PasswordHash = reader["password_hash"]?.ToString() ?? "",
 
                 UserRole = Enum.TryParse<Role>(reader["role"]?.ToString(), out var role)
                     ? role
