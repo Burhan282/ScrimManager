@@ -37,7 +37,7 @@ namespace ScrimManagerPresentation.Pages.Presentation.Teams
 
             if (LogoFile != null && LogoFile.Length > 0)
             {
-                using var memoryStream = new MemoryStream();
+                using var memoryStream = new MemoryStream(); //tijdelijk opslag plaats 
                 await LogoFile.CopyToAsync(memoryStream);
                 CreateTeamDTO.LogoData = memoryStream.ToArray();
             }

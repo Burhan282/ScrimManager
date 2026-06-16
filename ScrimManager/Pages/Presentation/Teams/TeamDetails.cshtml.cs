@@ -17,7 +17,7 @@ namespace ScrimManagerPresentation.Pages.Presentation.Teams
             _teamService = teamService;
         }
 
-        public TeamModel? Team { get; set; }
+        public TeamModel? Team { get; set; } 
 
         public List<User> TeamMembers { get; set; } = new();
 
@@ -52,7 +52,7 @@ namespace ScrimManagerPresentation.Pages.Presentation.Teams
             TempData["ToastMessage"] = "Request sent. Waiting for captain approval.";
             TempData["ToastType"] = "pending";
 
-            return RedirectToPage("/Presentation/Teams/TeamDetails", new { id });
+            return RedirectToPage("/Presentation/Teams/TeamDetails", new { id }); //stuurt teamid mee met de url
         }
     }
 }
