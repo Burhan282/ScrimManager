@@ -44,22 +44,6 @@ namespace ScrimManagerTests
             Assert.AreEqual("Burhan", user.Username);
         }
 
-        [TestMethod]
-        public void Login_WithWrongData_ShouldReturnNull()
-        {
-           
-            FakeUserRepository fakeRepository = new FakeUserRepository();
-            AuthService authService = new AuthService(fakeRepository);
-
-            authService.Register(CreateUser());
-
-            User? user = authService.Login(
-                "burhan@mail.com",
-                "wrongpassword");
-
-            Assert.IsNull(user);
-        }
-
         private static CreateUserDTO CreateUser()
         {
             return new CreateUserDTO

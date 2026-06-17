@@ -25,37 +25,47 @@ namespace ScrimManagerPresentation.Pages.Presentation.Teams
 
         public async Task<IActionResult> OnPostAsync()
         {
-            int? userId = HttpContext.Session.GetInt32("UserId");
-
-            if (userId == null || userId <= 0)
+            try
             {
-                TempData["ToastMessage"] = "You must be logged in to create a team.";
-                TempData["ToastType"] = "failed";
+                int? userId = HttpContext.Session.GetInt32("UserId");
 
-                return RedirectToPage("/Presentation/Account/Login");
+                if (userId == null || userId <= 0)
+                {
+                    TempData["ToastMessage"] = "You must be logged in to create a team.";
+                    TempData["ToastType"] = "failed";
+
+                    return RedirectToPage("/Presentation/Account/Login");
+                }
+
+                if (LogoFile != null && LogoFile.Length > 0)
+                {
+                    using var memoryStream = new MemoryStream(); //tijdelijk opslag plaats 
+                    await LogoFile.CopyToAsync(memoryStream);
+                    CreateTeamDTO.LogoData = memoryStream.ToArray();
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    TempData["ToastMessage"] = "Team could not be created. Check your input.";
+                    TempData["ToastType"] = "failed";
+
+                    return Page();
+                }
+
+                _teamService.CreateTeam(CreateTeamDTO, userId.Value);
+
+                TempData["ToastMessage"] = "Team created successfully.";
+                TempData["ToastType"] = "success";
+
+                return RedirectToPage("/Presentation/Teams/TeamIndex");
             }
-
-            if (LogoFile != null && LogoFile.Length > 0)
+            catch
             {
-                using var memoryStream = new MemoryStream(); //tijdelijk opslag plaats 
-                await LogoFile.CopyToAsync(memoryStream);
-                CreateTeamDTO.LogoData = memoryStream.ToArray();
-            }
-
-            if (!ModelState.IsValid)
-            {
-                TempData["ToastMessage"] = "Team could not be created. Check your input.";
+                TempData["ToastMessage"] = "Something went wrong while creating the team.";
                 TempData["ToastType"] = "failed";
 
                 return Page();
             }
-
-            _teamService.CreateTeam(CreateTeamDTO, userId.Value);
-
-            TempData["ToastMessage"] = "Team created successfully.";
-            TempData["ToastType"] = "success";
-
-            return RedirectToPage("/Presentation/Teams/TeamIndex");
         }
     }
 }

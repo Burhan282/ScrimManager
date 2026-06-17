@@ -23,7 +23,16 @@ namespace ScrimManagerPresentation.Pages.Presentation.Teams
 
         public void OnGet()
         {
-            Teams = _teamService.GetTeams();
+            try
+            {
+                Teams = _teamService.GetTeams();
+            }
+            catch
+            {
+                Teams = new List<Team>();
+                TempData["ToastMessage"] = "Teams could not be loaded. Please try again later.";
+                TempData["ToastType"] = "failed";
+            }
         }
     }
 }

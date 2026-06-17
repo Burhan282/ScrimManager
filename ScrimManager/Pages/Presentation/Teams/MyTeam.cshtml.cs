@@ -20,16 +20,28 @@ namespace ScrimManagerPresentation.Pages.Presentation.Teams
 
         public IActionResult OnGet()
         {
-            int? userId = HttpContext.Session.GetInt32("UserId");
-
-            if (userId == null)
+            try
             {
-                return RedirectToPage("/Presentation/Account/Login");
+                int? userId = HttpContext.Session.GetInt32("UserId");
+
+                if (userId == null)
+                {
+                    return RedirectToPage("/Presentation/Account/Login");
+                }
+
+                UserTeams = _teamService.GetTeamsByUserId(userId.Value);
+
+                return Page();
             }
+            catch
+            {
+                UserTeams = new List<TeamModel>();
 
-            UserTeams = _teamService.GetTeamsByUserId(userId.Value);
+                TempData["ToastMessage"] = "Your teams could not be loaded.";
+                TempData["ToastType"] = "failed";
 
-            return Page();
+                return Page();
+            }
         }
     }
 }

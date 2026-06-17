@@ -23,36 +23,56 @@ namespace ScrimManagerPresentation.Pages.Presentation.Teams
 
         public IActionResult OnGet(int id)
         {
-            Team = _teamService.GetTeamById(id);
-
-            if (Team == null)
+            try
             {
-                return NotFound();
+                Team = _teamService.GetTeamById(id);
+
+                if (Team == null)
+                {
+                    return NotFound();
+                }
+
+                TeamMembers = _teamService.GetTeamMembers(id);
+
+                return Page();
             }
+            catch
+            {
+                TempData["ToastMessage"] = "Team details could not be loaded.";
+                TempData["ToastType"] = "failed";
 
-            TeamMembers = _teamService.GetTeamMembers(id);
-
-            return Page();
+                return RedirectToPage("/Presentation/Teams/TeamIndex");
+            }
         }
 
         public IActionResult OnPostApply(int id)
         {
-            int? userId = HttpContext.Session.GetInt32("UserId");
-
-            if (userId == null)
+            try
             {
-                TempData["ToastMessage"] = "You must be logged in to apply.";
+                int? userId = HttpContext.Session.GetInt32("UserId");
+
+                if (userId == null)
+                {
+                    TempData["ToastMessage"] = "You must be logged in to apply.";
+                    TempData["ToastType"] = "failed";
+
+                    return RedirectToPage("/Presentation/Account/Login");
+                }
+
+                _teamService.ApplyToTeam(userId.Value, id);
+
+                TempData["ToastMessage"] = "Request sent. Waiting for captain approval.";
+                TempData["ToastType"] = "pending";
+
+                return RedirectToPage("/Presentation/Teams/TeamDetails", new { id }); //stuurt teamid mee met de url
+            }
+            catch
+            {
+                TempData["ToastMessage"] = "Your request could not be sent.";
                 TempData["ToastType"] = "failed";
 
-                return RedirectToPage("/Presentation/Account/Login");
+                return RedirectToPage("/Presentation/Teams/TeamDetails", new { id });
             }
-
-            _teamService.ApplyToTeam(userId.Value, id);
-
-            TempData["ToastMessage"] = "Request sent. Waiting for captain approval.";
-            TempData["ToastType"] = "pending";
-
-            return RedirectToPage("/Presentation/Teams/TeamDetails", new { id }); //stuurt teamid mee met de url
         }
     }
 }
