@@ -4,6 +4,7 @@ using ScrimManagerApplication.Application.Interfaces;
 using ScrimManagerApplication.Application.Models;
 using ScrimManagerDataAcces.DataAcces.Repositories;
 using ScrimManagerDataAccess;
+using Microsoft.Extensions.Configuration;
 
 namespace ScrimManagerPresentation.Pages.Presentation.Teams
 {
@@ -11,10 +12,10 @@ namespace ScrimManagerPresentation.Pages.Presentation.Teams
     {
         private readonly TeamService _teamService;
 
-        public TeamIndexModel()
+        public TeamIndexModel(IConfiguration configuration)
         {
-            string connectionString = "Host=aws-0-eu-west-1.pooler.supabase.com;Port=5432;Database=postgres;Username=postgres.hhsxuzlqfkvvkmpxxmka;Password=Persembe1907;SSL Mode=Require;Trust Server Certificate=true";
-            ITeamRepository teamRepository = new TeamRepository(connectionString);
+            string connectionString = configuration.GetConnectionString("DefaultConnection")!;
+            ITeamRepository teamRepository = new TeamRepository(connectionString); 
             IUserRepository userRepository = new UserRepository(connectionString);
             _teamService = new TeamService(teamRepository, userRepository);
         }
@@ -36,3 +37,4 @@ namespace ScrimManagerPresentation.Pages.Presentation.Teams
         }
     }
 }
+ 
