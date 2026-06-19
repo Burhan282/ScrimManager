@@ -10,6 +10,16 @@ namespace ScrimManagerDataAcces.DataAcces.FakeDataBases
         private List<Team> teams = new();
         private List<(int UserId, int TeamId)> teamMembers = new();
         private List<TeamJoinRequest> teamJoinRequests = new();
+        private readonly IUserRepository? userRepository;
+
+        public FakeTeamRepository()
+        {
+        }
+
+        public FakeTeamRepository(IUserRepository userRepository)
+        {
+            this.userRepository = userRepository;
+        }
 
         public int Add(Team team)
         {
@@ -48,7 +58,17 @@ namespace ScrimManagerDataAcces.DataAcces.FakeDataBases
 
         public List<User> GetTeamMembers(int teamId)
         {
-            return new List<User>();
+            if (userRepository == null)
+            {
+                return new List<User>();
+            }
+
+            return teamMembers
+                .Where(member => member.TeamId == teamId)
+                .Select(member => userRepository.GetById(member.UserId))
+                .Where(user => user != null)
+                .Select(user => user!)
+                .ToList();
         }
 
         public void ApplyToTeam(int userId, int teamId)
