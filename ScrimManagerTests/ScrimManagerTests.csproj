@@ -14,6 +14,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ScrimManagerApplication\ScrimManagerApplication.csproj" />
     <ProjectReference Include="..\ScrimManagerDataAcces\ScrimManagerDataAcces.csproj" />
+    <ProjectReference Include="..\ScrimManager\ScrimManagerPresentation.csproj" />
   </ItemGroup>
 
   <ItemGroup>
