@@ -8,6 +8,18 @@ namespace ScrimManagerTests
     [TestClass]
     public class AuthServiceTests
     {
+        private static CreateUserDTO CreateUser()
+        {
+            return new CreateUserDTO
+            {
+                Username = "Burhan",
+                Email = "burhan@mail.com",
+                Password = "1234",
+                UserRole = Role.Player,
+                UserRank = Rank.GoldIII
+            };
+        }
+
         [TestMethod]
         public void Register_ShouldAddUser()
         {
@@ -42,18 +54,6 @@ namespace ScrimManagerTests
          
             Assert.IsNotNull(user);
             Assert.AreEqual("Burhan", user.Username);
-        }
-
-        private static CreateUserDTO CreateUser()
-        {
-            return new CreateUserDTO
-            {
-                Username = "Burhan",
-                Email = "burhan@mail.com",
-                PasswordHash = "1234",
-                UserRole = Role.Player,
-                UserRank = Rank.GoldIII
-            };
         }
     }
 }

@@ -10,7 +10,7 @@ namespace ScrimManagerApplication.Application.Models.DTOModels
     {
         public string Username { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
-        public string PasswordHash { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
         public Rank UserRank { get; set; }
         public Region UserRegion { get; set; }
         public Role UserRole { get; set; }

@@ -21,7 +21,7 @@ namespace ScrimManagerApplication.Application
             {
                Username = dto.Username,
                Email = dto.Email,
-               PasswordHash = dto.PasswordHash,
+               Password = dto.Password,
                UserRegion = dto.UserRegion,
                UserRole = dto.UserRole,
                UserRank = dto.UserRank,
@@ -37,13 +37,11 @@ namespace ScrimManagerApplication.Application
         {
             var user = _userRepository.GetByEmail(email);
 
-            if (user?.PasswordHash == password)
+            if (user?.Password == password)
             {
-                System.Diagnostics.Debug.WriteLine($"LOGIN OK - USER ID: {user.Id}");
                 return user;
             }
 
-            System.Diagnostics.Debug.WriteLine("LOGIN FAILED");
             return null;
         }
     }

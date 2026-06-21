@@ -7,10 +7,15 @@ namespace ScrimManagerDataAcces.DataAcces.FakeDataBases
 {
     public class FakeUserRepository : IUserRepository
     {
-        private List<User> users = new();
+        private readonly List<User> users = new();
 
         public void Add(User user)
         {
+            if (user.Id == 0)
+            {
+                user.Id = users.Count + 1;
+            }
+
             users.Add(user);
         }
 

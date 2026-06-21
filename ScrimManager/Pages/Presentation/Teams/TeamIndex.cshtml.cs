@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Configuration;
 using ScrimManagerApplication.Application;
 using ScrimManagerApplication.Application.Interfaces;
 using ScrimManagerApplication.Application.Models;
 using ScrimManagerDataAcces.DataAcces.Repositories;
 using ScrimManagerDataAccess;
-using Microsoft.Extensions.Configuration;
 
 namespace ScrimManagerPresentation.Pages.Presentation.Teams
 {
@@ -15,10 +15,12 @@ namespace ScrimManagerPresentation.Pages.Presentation.Teams
         public TeamIndexModel(IConfiguration configuration)
         {
             string connectionString = configuration.GetConnectionString("DefaultConnection")!;
-            ITeamRepository teamRepository = new TeamRepository(connectionString); 
+            ITeamRepository teamRepository = new TeamRepository(connectionString);
             IUserRepository userRepository = new UserRepository(connectionString);
+
             _teamService = new TeamService(teamRepository, userRepository);
         }
+
         //leeg
         public List<Team> Teams { get; set; } = new();
 

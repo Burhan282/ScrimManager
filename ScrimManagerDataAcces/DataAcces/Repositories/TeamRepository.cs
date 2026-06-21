@@ -343,7 +343,7 @@ namespace ScrimManagerDataAcces.DataAcces.Repositories
                 Id = Convert.ToInt32(reader["id"]),
                 Username = reader["username"]?.ToString() ?? "",
                 Email = reader["email"]?.ToString() ?? "",
-                PasswordHash = reader["password_hash"]?.ToString() ?? "",
+                Password = reader["password_hash"]?.ToString() ?? "",
 
                 UserRole = Enum.TryParse<Role>(reader["role"]?.ToString(), out var role)
                     ? role

@@ -7,10 +7,15 @@ namespace ScrimManagerDataAcces.DataAcces.FakeDataBases
 {
     public class FakeTournamentRepository : ITournamentRepository
     {
-        private List<Tournament> tournaments = new();
+        private readonly List<Tournament> tournaments = new();
 
         public void Add(Tournament tournament)
         {
+            if (tournament.Id == 0)
+            {
+                tournament.Id = tournaments.Count + 1;
+            }
+
             tournaments.Add(tournament);
         }
 

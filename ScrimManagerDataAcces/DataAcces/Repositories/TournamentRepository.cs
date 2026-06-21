@@ -1,4 +1,4 @@
-﻿using Npgsql;
+using Npgsql;
 using ScrimManagerApplication.Application.Interfaces;
 using ScrimManagerApplication.Application.Models;
 using System;
@@ -57,23 +57,7 @@ namespace ScrimManagerDataAccess
 
             while (reader.Read())
             {
-                list.Add(new Tournament
-                {
-                    Id = Convert.ToInt32(reader["id"]),
-                    Naam = reader["name"].ToString() ?? "",
-                    Organisator = reader["organizer"].ToString() ?? "",
-                    Datum = Convert.ToDateTime(reader["date"]),
-                    Format = reader["game_format"].ToString() ?? "",
-                    MaxTeams = Convert.ToInt32(reader["max_teams"]),
-                    Status = reader["status"].ToString() ?? "",
-                    ParticipatingTeams = Convert.ToInt32(reader["participating_teams"]),
-                    Description = reader["description"] == DBNull.Value
-                        ? null
-                        : reader["description"].ToString(),
-                    PrizeMoney = reader["prize_money"] == DBNull.Value
-                        ? null
-                        : Convert.ToDecimal(reader["prize_money"])
-                });
+                list.Add(MapTournament(reader));
             }
 
             return list;
@@ -94,21 +78,7 @@ namespace ScrimManagerDataAccess
             if (!reader.Read())
                 return null;
 
-            return new Tournament
-            {
-                Id = Convert.ToInt32(reader["id"]),
-                Naam = reader["name"].ToString() ?? "",
-                Organisator = reader["organizer"].ToString() ?? "",
-                Datum = Convert.ToDateTime(reader["date"]),
-                Format = reader["game_format"].ToString() ?? "",
-                MaxTeams = Convert.ToInt32(reader["max_teams"]),
-                Status = reader["status"].ToString() ?? "",
-                ParticipatingTeams = Convert.ToInt32(reader["participating_teams"]),
-                Description = reader["description"] == DBNull.Value ? null : reader["description"].ToString(),
-                PrizeMoney = reader["prize_money"] == DBNull.Value
-                    ? null
-                    : Convert.ToDecimal(reader["prize_money"])
-            };
+            return MapTournament(reader);
         }
 
         public List<TournamentParticipationDetails> GetParticipationDetails(int tournamentId)
@@ -438,6 +408,27 @@ namespace ScrimManagerDataAccess
             }
 
             return tournaments;
+        }
+
+        private static Tournament MapTournament(NpgsqlDataReader reader)
+        {
+            return new Tournament
+            {
+                Id = Convert.ToInt32(reader["id"]),
+                Naam = reader["name"].ToString() ?? "",
+                Organisator = reader["organizer"].ToString() ?? "",
+                Datum = Convert.ToDateTime(reader["date"]),
+                Format = reader["game_format"].ToString() ?? "",
+                MaxTeams = Convert.ToInt32(reader["max_teams"]),
+                Status = reader["status"].ToString() ?? "",
+                ParticipatingTeams = Convert.ToInt32(reader["participating_teams"]),
+                Description = reader["description"] == DBNull.Value
+                    ? null
+                    : reader["description"].ToString(),
+                PrizeMoney = reader["prize_money"] == DBNull.Value
+                    ? null
+                    : Convert.ToDecimal(reader["prize_money"])
+            };
         }
 
         private static void EnsureInvitationTable(NpgsqlConnection conn)

@@ -1,4 +1,4 @@
-﻿using Npgsql;
+using Npgsql;
 using ScrimManagerApplication.Application.Interfaces;
 using ScrimManagerApplication.Application.Models;
 using System;
@@ -30,7 +30,7 @@ namespace ScrimManagerDataAccess
 
             cmd.Parameters.AddWithValue("username", user.Username ?? "");
             cmd.Parameters.AddWithValue("email", user.Email ?? "");
-            cmd.Parameters.AddWithValue("password_hash", user.PasswordHash ?? "");
+            cmd.Parameters.AddWithValue("password_hash", user.Password ?? "");
             cmd.Parameters.AddWithValue("role", user.UserRole.ToString());
             cmd.Parameters.AddWithValue("rank", (int)user.UserRank);
             cmd.Parameters.AddWithValue("region", user.UserRegion.ToString());
@@ -97,7 +97,7 @@ namespace ScrimManagerDataAccess
                 Id = Convert.ToInt32(reader["id"]),
                 Username = reader["username"]?.ToString() ?? "",
                 Email = reader["email"]?.ToString() ?? "",
-                PasswordHash = reader["password_hash"]?.ToString() ?? "",
+                Password = reader["password_hash"]?.ToString() ?? "",
 
                 UserRole = Enum.TryParse<Role>(reader["role"]?.ToString(), out var role)
                     ? role

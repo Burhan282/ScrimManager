@@ -15,13 +15,7 @@ namespace ScrimManagerTests
             FakeTeamRepository fakeTeamRepository = new FakeTeamRepository();
             FakeUserRepository fakeUserRepository = new FakeUserRepository();
 
-            fakeUserRepository.Add(new User
-            {
-                Id = 1,
-                Username = "Burhan",
-                UserRank = Rank.GoldIII,
-                UserRegion = Region.EU
-            });
+            fakeUserRepository.Add(CreateUser());
 
             TeamService teamService = new TeamService(fakeTeamRepository, fakeUserRepository);
 
@@ -51,13 +45,7 @@ namespace ScrimManagerTests
             FakeTeamRepository fakeTeamRepository = new FakeTeamRepository();
             FakeUserRepository fakeUserRepository = new FakeUserRepository();
 
-            fakeUserRepository.Add(new User
-            {
-                Id = 1,
-                Username = "Burhan",
-                UserRank = Rank.GoldIII,
-                UserRegion = Region.EU
-            });
+            fakeUserRepository.Add(CreateUser());
 
             TeamService teamService = new TeamService(fakeTeamRepository, fakeUserRepository);
 
@@ -77,5 +65,17 @@ namespace ScrimManagerTests
             Assert.AreEqual("Team Alpha", teamsFromUser[0].Name);
         }
 
+        private static User CreateUser()
+        {
+            return new User
+            {
+                Username = "Burhan",
+                Email = "burhan@mail.com",
+                Password = "1234",
+                UserRole = Role.Player,
+                UserRank = Rank.GoldIII,
+                UserRegion = Region.EU
+            };
+        }
     }
 }

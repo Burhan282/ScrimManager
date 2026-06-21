@@ -7,9 +7,9 @@ namespace ScrimManagerDataAcces.DataAcces.FakeDataBases
 {
     public class FakeTeamRepository : ITeamRepository
     {
-        private List<Team> teams = new();
-        private List<(int UserId, int TeamId)> teamMembers = new();
-        private List<TeamJoinRequest> teamJoinRequests = new();
+        private readonly List<Team> teams = new();
+        private readonly List<(int UserId, int TeamId)> teamMembers = new();
+        private readonly List<TeamJoinRequest> teamJoinRequests = new();
         private readonly IUserRepository? userRepository;
 
         public FakeTeamRepository()
